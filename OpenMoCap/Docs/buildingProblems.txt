@@ -1,0 +1,28 @@
+Building Problems
+
+There might be some problems on installing OpenMoCap on your station. Most of it, 
+is due of not setted system / build variables or system / build variables with 
+wrong values. Let’s see some of what could happen on your installation.
+
+  - Can’t build the project because it don’t find any “moc” files.
+
+	When you checkout the trunk on repository then you have to Clean the project 
+	and then Build it. But even when you correctly installed the QT Library it 
+	don’t find the correct Qt Moc Compiler, then set it manually! You’ll have to 
+	modify the Makefile file on the directory \src\Gui in the line that refers 
+	it:
+
+		- QT_MOC_COMPILER = moc
+		+ QT_MOC_COMPILER = C:\Qt\2009.03\qt\bin\moc.exe
+
+	In my case!
+	Then you’ll be able to Build and Clean the project as you wish.
+
+  - On the last steps of the Building process, some of the OptiTrack libs are 
+  	not finded.
+
+	It happens because the main installation of the Natural Point Optitrack 
+	Drivers are installed in a different directory than the main build variables 
+	are setted. Just set the new right value for directory on the variable 
+	OPTITRACK_HOME on (Eclipse) Project / Properties / C/C++ Build / Build 
+	Variables.

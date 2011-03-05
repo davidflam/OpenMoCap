@@ -1,0 +1,14 @@
+OpenMocap Known Issues
+Last Revision: 18/02/2009
+#########################
+
+1. Google's webcamera plugin for gtalk.
+It creates two virtual camera adapters that are not well handled by videoInput and OpenMocap.
+The program will crash.
+
+2. videoInput x OptiTrack SDK
+coInitializeEx's calls use different models. Initialize it first with apartment thread model.
+
+3. MATLAB
+Put Qt's bin directory before Matlab's bin directory in system or user PATH. Matlab may use an
+older version of Qt libraries, preventing OpenMoCap from running (DLL errors).

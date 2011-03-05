@@ -1,0 +1,10 @@
+OpenMocap Code Guidelines
+Last Revision: 18/02/2009
+#########################
+
+1. Instance variables should be prefixed with '_'
+2. Getters and setters must be defined and implement in the header (.h) file if no complex logic is needed.
+3. Shared variables must be named with the suffix "Ref", but without it where they are initialized. (Look Mocap and MainWindow classes)
+4. All comments must be written in ENGLISH.
+5. Doxygen comments must only be written in declaration files (.h extension).
+6. Doxygen comments for getters and setters methods are optional if no complex logic is required.

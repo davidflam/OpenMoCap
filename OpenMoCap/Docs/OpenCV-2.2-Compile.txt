@@ -1,0 +1,65 @@
+OpenCV 2.2
+
+In order to make OpenCV 2.2 (containing C++ code) work under Windows with Code::Blocks and MinGW, Matthew (mazeus12 on the mailing list) did the following:
+
+As mentioned in "OpenCV-2.2.0-win-README.txt", "OpenCV-2.2.0-win32-vs2010.exe" does not contain binaries for MinGW so they need to be built from the contents in "OpenCV-2.2.0-win.zip".
+
+Steps to build OpenCV 2.2 with Code::Blocks and MinGW:
+
+1. Install Code::Blocks (10.05) with the (MinGW) C++ compiler option. This should among other install the C++ compiler and mingw32-make to "C:\Program Files\CodeBlocks\MinGW\bin" (I also tried to install the latest MinGW using "mingw-get install gcc g++ mingw32-make" from www.mingw.org but I got an error in extracting some files…)
+
+2. Add "C:\Program Files\CodeBlocks\MinGW\bin" to system PATH (at your own judgment: remove any other paths to MinGW (Somehow DevCpp MinGW paths with probable different versions messed up the build process))
+
+3. Install Cmake (2.8)
+
+4. Extract "OpenCV-2.2.0-win.zip" to "C:\OpenCV-2.2.0-win" (It creates a second folder so the final destination looks like that: "C:\OpenCV-2.2.0-win\OpenCV-2.2.0")
+
+5. Run Cmake (cmake-gui)
+
+6. Set the source code: "C:\OpenCV-2.2.0-win\OpenCV-2.2.0"
+
+7. Set where to build the binaries: e.g. "C:\OpenCV2.2MinGW"
+
+8. Press configure
+
+9. Let Cmake create the new folder
+
+10. Specify the generator: MinGW Makefiles
+
+11. Select "Specify native compilers" and click next
+
+12. For C set: C:/Program Files/CodeBlocks/MinGW/bin/gcc.exe
+
+13. For C++ set: C:/Program Files/CodeBlocks/MinGW/bin/g++.exe
+
+14. Click finish
+
+15. In the configuration screen type in "RELEASE" (or "DEBUG" if you want to build a debug version) for "CMAKE_BUILD_TYPE". Select BUILD_EXAMPLES if you want (I didn't change anything else here like "WITH_TBB" or "WITH QT" etc. I'll try that when time comes to use TBB or Qt)
+
+16. Click configure again
+
+17. Click generate
+
+18. Close cmake
+
+19. Go to the command prompt and inside the folder "C:\OpenCV2.2MinGW" type "mingw32-make" and hit enter (takes some time)
+
+20. Then type "mingw32-make install" and hit enter again
+
+21. Open Code::Blocks and create a new C++ project (Configuration similar to the guide: CodeBlocks).
+
+22. In menu: "Project/Build options/Linker settings/Link libraries" add "C:\OpenCV2.2MinGW\lib\libopencv_calib3d220.dll.a" and all the other *.dll.a files in this folder
+
+23. In menu: "Project/Build options/Search directories/Compiler" add "C:\OpenCV2.2MinGW\include" (includes in a new program schould look like this: "#include <opencv2/core/core.hpp>, #include <opencv2/imgproc/imgproc.hpp>, #include <opencv2/highgui/highgui.hpp> etc.")
+
+24. In menu: "Project/Build options/Search directories/Linker" add "C:\OpenCV2.2MinGW\lib"
+
+The otions in steps 22 - 24 can also be added as global options in menu: Settings/Compiler an Debugger/Global compiler settings/..., so they will apply to any project and opened *.cpp file.
+
+25. If necessary, in menu: Settings/Compiler an Debugger/Global compiler settings/Toolchain executables" specify "C:\Program Files\CodeBlocks\MinGW" for the compiler's installation directory.
+
+26. Open a sample file (or import it into the project), e.g. "C:\OpenCV2.2MinGW\samples\cpp\dft.cpp" and built it. (If the *.cpp files do not exist in this folder, you can find them in the initial folder where you extracted "OpenCV-2.2.0-win.zip" i.e. "C:\OpenCV-2.2.0-win\OpenCV-2.2.0\samples\cpp")
+
+27. Add "C:\OpenCV2.2MinGW\bin" to the system path
+
+28. Run the program

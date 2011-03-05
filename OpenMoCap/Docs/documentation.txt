@@ -1,0 +1,30 @@
+################################################################################
+---------        How To Generate The OpenMocap Documentation          ----------
+################################################################################
+
+0.Objective
+@@@@@@@@@@@
+
+	The purpose of this file is to provide a quick explanation on how to
+generate the OpenMocap documentation.
+
+1.IDE
+@@@@@
+
+* Eclox
+(http://download.gna.org/eclox/update)
+
+2.Comments
+@@@@@@@@@@
+
+* The comments pattern used is the "Qt style". For more information, visit the
+website:
+(http://www.doxygen.org)
+
+3. Generating the documentation
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+* All documentation settings are on file "Mocap/Resources/docs/Mocap.doxyfile".
+
+* To generate the documentation, click the right button on the project and then
+"Build Documentation".

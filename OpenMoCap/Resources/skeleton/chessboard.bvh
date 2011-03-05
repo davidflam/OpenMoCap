@@ -1,0 +1,46 @@
+HIERARCHY
+ROOT Center
+{
+	OFFSET	0.00	0.00	0.00
+	CHANNELS 6 Xposition Yposition Zposition Zrotation Xrotation Yrotation
+	JOINT A
+	{
+		OFFSET	 5.00	 0.00	 0.00
+		CHANNELS 3 Zrotation Xrotation Yrotation
+		End Site 
+		{
+			OFFSET	 5.00	 0.00	 0.00
+		}
+
+	}
+	JOINT B
+	{
+		OFFSET	 0.00	 -5.00	 0.00
+		CHANNELS 3 Zrotation Xrotation Yrotation
+		End Site 
+		{
+			OFFSET	 0.00	 -5.00	 0.00
+		}
+
+	}
+	JOINT C
+	{
+		OFFSET	 0.00	 5.00	 0.00
+		CHANNELS 3 Zrotation Xrotation Yrotation
+		End Site 
+		{
+			OFFSET	 0.00	 5.00	 0.00
+		}
+
+	}
+	JOINT D
+	{
+		OFFSET	 -5.00	 0.00	 0.00
+		CHANNELS 3 Zrotation Xrotation Yrotation
+		End Site 
+		{
+			OFFSET	 -5.00	 0.00	 0.00
+		}
+
+	}
+}

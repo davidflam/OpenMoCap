@@ -1,0 +1,68 @@
+#############################################################
+---------        How To Compile OpenMocap          ----------
+#############################################################
+
+0.Objective
+@@@@@@@@@@
+
+	The purpose of this file is to provide a quick start for
+developers that want to contribute with OpenMocap.
+
+1.Compiler
+@@@@@@@@@@@@
+
+*TDM's Experimental GCC/MinGW32 Builds
+(http://www.tdragon.net/recentgcc/)
+
+	Install the lastest version available from webpage. Copy 
+from the SVN repository (see section 5) "Mocap/Vendor/mingw/winbase.h"
+to C:\MinGW\Include.
+
+2.Libraries
+@@@@@@@@@@@@@
+
+*OpenCV 1.1 pre1a
+(http://sourceforge.net/projects/opencvlibrary/)
+
+*Microsoft Visual C++ 2005 SP1 Redistributable Package (x86) (OpenCV 1.1 requires it!)
+(http://www.microsoft.com/downloads/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en)
+
+*Qt/Windows Open Source Edition
+(http://trolltech.com/developer/downloads/qt/windows)
+
+*videoInput 0.1995 (Don't need to install it, it is statically linked!)
+(http://muonics.net/school/spring05/videoInput/)
+
+*OptiTrack SDK for V100, C120, FLEX:3 Cameras Version 1.3.035
+(http://www.naturalpoint.com/optitrack/support/downloads.html)
+
+3.System Variables
+@@@@@@@@@@@@@@@@@@@@@@
+
++C:\Qt\<QT_VERSION>\qt\bin;
+
++C:\Program Files\OpenCV\bin;
+
++C:\MinGW\bin;
+
++C:\Program Files\NaturalPoint\Optitrack\bin;
+
+4.IDE
+@@@@@
+
+*Eclipse C++
+(www.eclipse.org)
+
+*Subclipse
+(http://subclipse.tigris.org/)
+
+5.SVN Repository
+@@@@@@@@@@@@@@@@
+
+*https://svn.xp-dev.com/svn/davidflam_Mocap
+
+6.Comments
+@@@@@@@@@@@@@
+	
+	All needed libraries in this project must be installed using default
+paths, as shown in section 3.

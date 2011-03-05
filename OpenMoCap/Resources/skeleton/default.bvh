@@ -1,0 +1,111 @@
+HIERARCHY
+ROOT Quadril
+{
+	OFFSET	0.00	0.00	0.00
+	CHANNELS 6 Xposition Yposition Zposition Zrotation Xrotation Yrotation
+	JOINT Peito
+	{
+		OFFSET	 0.00	 5.21	 0.00
+		CHANNELS 3 Zrotation Xrotation Yrotation
+		JOINT Pescoço
+		{
+			OFFSET	 0.00	 18.65	 0.00
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT Cabeça
+			{
+				OFFSET	 0.00	 5.45	 0.00
+				CHANNELS 3 Zrotation Xrotation Yrotation
+				End Site 
+				{
+					OFFSET	 0.00	 3.87	 0.00
+				}
+			}
+		}
+		JOINT LeftCollar
+		{
+			OFFSET	 1.12	 16.23	 1.87
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT LeftUpArm
+			{
+				OFFSET	 5.54	 0.00	 0.00
+				CHANNELS 3 Zrotation Xrotation Yrotation
+				JOINT LeftLowArm
+				{
+					OFFSET	 0.00	-11.96	 0.00
+					CHANNELS 3 Zrotation Xrotation Yrotation
+					JOINT LeftHand
+					{
+						OFFSET	 0.00	-9.93	 0.00
+						CHANNELS 3 Zrotation Xrotation Yrotation
+						End Site 
+						{
+							OFFSET	 0.00	-7.00	 0.00
+						}
+					}
+				}
+			}
+		}
+		JOINT RightCollar
+		{
+			OFFSET	-1.12	 16.23	 1.87
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT RightUpArm
+			{
+				OFFSET	-6.07	 0.00	 0.00
+				CHANNELS 3 Zrotation Xrotation Yrotation
+				JOINT RightLowArm
+				{
+					OFFSET	 0.00	-11.82	 0.00
+					CHANNELS 3 Zrotation Xrotation Yrotation
+					JOINT RightHand
+					{
+						OFFSET	 0.00	-10.65	 0.00
+						CHANNELS 3 Zrotation Xrotation Yrotation
+						End Site 
+						{
+							OFFSET	 0.00	-7.00	 0.00
+						}
+					}
+				}
+			}
+		}
+	}
+	JOINT LeftUpLeg
+	{
+		OFFSET	 3.91	 0.00	 0.00
+		CHANNELS 3 Zrotation Xrotation Yrotation
+		JOINT LeftLowLeg
+		{
+			OFFSET	 0.00	-18.34	 0.00
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT LeftFoot
+			{
+				OFFSET	 0.00	-17.37	 0.00
+				CHANNELS 3 Zrotation Xrotation Yrotation
+				End Site 
+				{
+					OFFSET	 0.00	-3.46	 0.00
+				}
+			}
+		}
+	}
+	JOINT RightUpLeg
+	{
+		OFFSET	-3.91	 0.00	 0.00
+		CHANNELS 3 Zrotation Xrotation Yrotation
+		JOINT RightLowLeg
+		{
+			OFFSET	 0.00	-17.63	 0.00
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT RightFoot
+			{
+				OFFSET	 0.00	-17.14	 0.00
+				CHANNELS 3 Zrotation Xrotation Yrotation
+				End Site 
+				{
+					OFFSET	 0.00	-3.75	 0.00
+				}
+			}
+		}
+	}
+}
