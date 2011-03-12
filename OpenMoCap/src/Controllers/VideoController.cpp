@@ -13,8 +13,8 @@ VideoController::VideoController(AbstractCamera* camera, AbstractCalibrator* cal
 	_videoStatus(VideoStatusEnum::PLAY_LIVE), _cameraRef(camera), _calibrator(calibrator), _POIFinder(POIFinder),
 			_tracker(tracker) {
 
-	poiDetectionEndEvent = CreateEvent(NULL, NULL, TRUE, NULL);
-	trackingEndEvent = CreateEvent(NULL, NULL, TRUE, NULL);
+	poiDetectionEndEvent = CreateEvent(NULL, TRUE, TRUE, NULL);
+	trackingEndEvent = CreateEvent(NULL, TRUE, TRUE, NULL);
 }
 
 VideoController::~VideoController() {

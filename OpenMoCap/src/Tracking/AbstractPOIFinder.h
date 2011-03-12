@@ -6,6 +6,8 @@
 #include <QWidget>
 
 #include "../Utils/Image.h"
+#include "../Utils/Log.h"
+#include "../Utils/Utils.h"
 #include "../Entities/POI.h"
 
 using namespace std;

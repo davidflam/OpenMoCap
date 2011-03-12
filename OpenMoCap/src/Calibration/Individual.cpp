@@ -25,21 +25,11 @@ Individual::~Individual() {
 
 void Individual::info() {
 
-	Log::getInstance()->setDefaultSeverity(pantheios::SEV_INFORMATIONAL);
-	log("Tx, Ty, Tz = %f, %f, %f", _variables->data.fl[0], _variables->data.fl[1], _variables->data.fl[2]);
-	//cout << "Tx, Ty, Tz = ";
-	//cout << _variables->data.fl[0] << ", " << _variables->data.fl[1] << ", " << _variables->data.fl[2] << endl;
-	log("Tx', Ty', Tz' = %f, %f, %f", _variables->data.fl[3], _variables->data.fl[4], _variables->data.fl[5]);
-	//cout << "Tx',Ty',Tz' = ";
-	//cout << _variables->data.fl[3] << ", " << _variables->data.fl[4] << ", " << _variables->data.fl[5] << endl;
-	log("a, b, g = %f, %f, %f", _variables->data.fl[6], _variables->data.fl[7], _variables->data.fl[8]);
-	//cout << "a, b, g = ";
-	//cout << _variables->data.fl[6] << ", " << _variables->data.fl[7] << ", " << _variables->data.fl[8] << endl;
-	log("a', b', g' = %f, %f, %f", _variables->data.fl[9], _variables->data.fl[10], _variables->data.fl[11]);
-	//cout << "a', b', g' = ";
-	//cout << _variables->data.fl[9] << ", " << _variables->data.fl[10] << ", " << _variables->data.fl[11] << endl;
-	log("f = %f", _variables->data.fl[12]);
-	//cout << "f = " << _variables->data.fl[12] << endl;
+	logDEBUG("Tx, Ty, Tz = %f, %f, %f", _variables->data.fl[0], _variables->data.fl[1], _variables->data.fl[2]);
+	logDEBUG("Tx', Ty', Tz' = %f, %f, %f", _variables->data.fl[3], _variables->data.fl[4], _variables->data.fl[5]);
+	logDEBUG("a, b, g = %f, %f, %f", _variables->data.fl[6], _variables->data.fl[7], _variables->data.fl[8]);
+	logDEBUG("a', b', g' = %f, %f, %f", _variables->data.fl[9], _variables->data.fl[10], _variables->data.fl[11]);
+	logDEBUG("f = %f", _variables->data.fl[12]);
 
 }
 

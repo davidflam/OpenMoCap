@@ -5,7 +5,6 @@
 #include <string>
 
 #include "AbstractPOIFinder.h"
-#include "../Utils/Utils.h"
 
 class AbstractTracker {
 

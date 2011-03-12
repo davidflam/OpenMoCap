@@ -1,15 +1,14 @@
 #ifndef IMAGEWIDGET_H_
 #define IMAGEWIDGET_H_
 
+#include "../../Utils/Image.h"
+
 #include <opencv2/opencv.hpp>
 #include <GL/gl.h>
 #include <GL/glext.h>
 #include <GL/glu.h>
 #include <QObject>
 #include <QtOpenGL>
-
-#include "../../Utils/Image.h"
-#include "../../Utils/Log.h"
 
 class ImageWidget : public QGLWidget {
 

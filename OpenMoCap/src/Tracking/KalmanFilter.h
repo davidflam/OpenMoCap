@@ -2,7 +2,6 @@
 #define KALMANFILTER_H_
 
 #include "AbstractTracker.h"
-#include "../Utils/Utils.h"
 
 class KalmanFilter: public AbstractTracker {
 

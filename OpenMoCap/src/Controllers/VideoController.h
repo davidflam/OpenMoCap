@@ -11,7 +11,6 @@
 #include "../Tracking/AbstractTracker.h"
 #include "../Utils/AbstractThread.h"
 #include "../Gui/Widgets/POIsImageWidget.h"
-#include "../Utils/Log.h"
 
 using namespace std;
 

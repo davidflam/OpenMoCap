@@ -15,7 +15,7 @@ KalmanFilter::KalmanFilter() {
 
 KalmanFilter::~KalmanFilter() {
 
-	cout << "destruiu Kalman" << endl;
+	logDEBUG("Kalman Filter destroyed");
 
 }
 
@@ -65,7 +65,7 @@ void KalmanFilter::refreshPOIsPosition(map<string, POI>& currentPOIs, vector<POI
 		POI POIToTrack = it->second;
 
 		if (POIToTrack.getKalman() == NULL){
-			cout << "Criou Kalman" << endl;
+			logDEBUG("Created Kalman Filter");
 			POIToTrack.setKalman( this->initKalman(POIToTrack.getCoordinates2d()) );
 		}
 
@@ -156,7 +156,7 @@ void KalmanFilter::refreshPOIsPosition(map<string, POI>& currentPOIs, vector<POI
 
 		}
 
-		cout << "minDist: " << minDist << endl;
+		logDEBUG("minDist: %d", minDist);
 		POI::fileOut << minDist << endl;
 
 		//--- Found correspondence

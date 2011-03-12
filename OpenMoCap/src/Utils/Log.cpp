@@ -2,7 +2,8 @@
  * Log.cpp
  *
  *  Created on: 25/09/2009
- *      Author: laertemateus
+ *      Author: Laerte Mateus
+ *      Author: David Lunardi Flam
  */
 
 #include "Log.h"
