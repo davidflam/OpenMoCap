@@ -83,4 +83,15 @@
 		<nature>org.eclipse.cdt.core.cnature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1299936567013</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-true-false-Debug</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
