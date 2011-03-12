@@ -105,6 +105,7 @@ void VideoController::stopVideoCapture() {
 
 	//--- If recording, stops it!
 	if (_videoStatus == VideoStatusEnum::RECORD) {
+		logDEBUG("Stopped recording video from %s.", _cameraRef->getName().c_str());
 		cvReleaseVideoWriter(&_videoWriter);
 	}
 
@@ -120,12 +121,10 @@ void VideoController::startRecordingVideo(const char* videoFilePath) {
 
 	_videoStatus = VideoStatusEnum::RECORD;
 
-	//--- video without compression, we don't want artifacts while testing algoritms
-	//_videoWriter = cvCreateVideoWriter(videoFilePath, CV_FOURCC('I', 'Y', 'U', 'V'), _cameraRef->getFrameRate(),
-	//		cvSize(_cameraRef->getWidth(), _cameraRef->getHeight()));
+	logDEBUG("Started recording video from %s.", _cameraRef->getName().c_str());
 
-	_videoWriter = cvCreateVideoWriter(videoFilePath,  CV_FOURCC('Y', 'U', 'V', '8'), 30.0,
-				cvSize(640, 480));
+	//--- video without compression, we don't want artifacts while testing algoritms
+	_videoWriter = cvCreateVideoWriter(videoFilePath, CV_FOURCC_DEFAULT, _cameraRef->getFrameRate(), cvSize(_cameraRef->getWidth(), _cameraRef->getHeight()));
 }
 
 
