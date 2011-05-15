@@ -29,7 +29,7 @@
 
 using namespace std;
 
-static const int MSEC_BETWEEN_CALIB_IMAGES = 500;
+static const int MSEC_BETWEEN_CALIB_IMAGES = 5000;
 class CaptureController;
 
 class StereoVisionCalibrationDialog: public QDialog {
@@ -37,7 +37,7 @@ class StereoVisionCalibrationDialog: public QDialog {
 Q_OBJECT
 public:
     StereoVisionCalibrationDialog(CaptureController *captureController);
-    bool areCamerasStateValidForCalibrationPointRecording();
+    bool foundValidCornersForStereoCalibration();
 private slots:
     void calibrate();
     void changeParameter(double value);
@@ -48,7 +48,7 @@ private:
     CaptureController *_captureControllerRef;
     vector<AbstractCamera*> *_camerasRef;
     ThreeDWidget *_modelVisualizationRef;
-    vector<map<string,POI> > _calibrationPoints;
+    vector<POI> _calibrationPoints;
     QVBoxLayout *_mainLayout;
     QLabel *_numberAvailablePointsLabel;
     QPushButton *_beginRecordingPointsButton;
@@ -58,10 +58,10 @@ private:
     double _numIntCornersRow;
     QDoubleSpinBox *_numIntCornersColSpinBox;
     double _numIntCornersCol;
-    QDoubleSpinBox *_differentialVariationSpinBox;
-    double _differentialVariation;
-    QDoubleSpinBox *_recombinationConstantSpinBox;
-    double _recombinationConstant;
+    QDoubleSpinBox *_calibrationPatternWidthSpinBox;
+    double _calibrationPatternWidth;
+    QDoubleSpinBox *_calibrationPatternHeightSpinBox;
+    double _calibrationPatternHeight;
     void createAlgorithmParametersBox();
     QDoubleSpinBox *_maxDepthSpinBox;
     double _maxDepth;
@@ -76,7 +76,6 @@ private:
     QProgressBar *_progresBar;
     void createCalibrationBox();
     QTextEdit *_resultsText;
-    int _numCalibrationPoints;
     void refreshAvailableCalibrationPointsLabel();
     QTimer* _recordPointsTimer;
 
