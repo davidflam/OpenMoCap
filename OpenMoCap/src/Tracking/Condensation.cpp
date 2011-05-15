@@ -156,8 +156,6 @@ void Condensation::refreshPOIsPosition(map<string, POI>& currentPOIs, vector<POI
 		}
 
 		cout << "minDist: " << minDist << endl;
-		POI::fileOut << minDist << endl;
-
 
 		//--- Found correspondence
 		if (minDistIndex >= 0) { // Founded a valid point

@@ -10,7 +10,7 @@
 #include "MainWindow.h"
 
 void MainWindow::about() {
-	QMessageBox::about(this, tr("About OpenMoCap"), tr("<center><b>OpenMoCap Alpha</b><br/>"
+	QMessageBox::about(this, tr("About OpenMoCap"), tr("<center><b>OpenMoCap 2011</b><br/>"
 		"<br/><i>Lead Developer</i>"
 		"<br/>David Lunardi Flam<br/>"
 		"<br/><i>Developers</i>"
@@ -293,26 +293,13 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::stereoCalibration() {
 
-	vector<AbstractCamera*>* camerasRef = _mocapRef->getCameras();
-	ThreeDWidget* modelVisualizationRef = _captureController->getVisualizationRef();
-
-	if (camerasRef->size() == 0) {
+	if (_captureController->getMocap()->getCameras()->size() == 0) {
 
 		QMessageBox::critical(this, "Critical Error", "There are no connected cameras!");
 		logERROR("Can't calibrate, there are no connected cameras!!!");
 
 	} else if (_stereoVisionCalibrationDialog == NULL) {
-
-		if (StereoVisionCalibrationDialog::areCamerasStateValidForCalibrationPointRecording(camerasRef)) {
-
-			_stereoVisionCalibrationDialog = new StereoVisionCalibrationDialog(camerasRef, modelVisualizationRef);
-
-		} else {
-			QMessageBox::critical(
-					this,
-					"Critical Error",
-					"In order to begin calibration, each camera window must have exactly <b>1</b> POI with semantic. This semantic must be equal for each connected camera.");
-		}
+		_stereoVisionCalibrationDialog = new StereoVisionCalibrationDialog(_captureController);
 	}
 
 	if (_stereoVisionCalibrationDialog != NULL) {

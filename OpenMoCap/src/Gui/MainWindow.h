@@ -10,12 +10,12 @@
 #include "Dialogs/StereoVisionCalibrationDialog.h"
 #include "Widgets/CameraWidget.h"
 #include "Widgets/ThreeDWidget.h"
-#include "../Controllers/CaptureController.h"
 #include "../Utils/Log.h"
 
 //--- Forward Declarations
 class Mocap;
 class CaptureController;
+class StereoVisionCalibrationDialog;
 
 using namespace std;
 

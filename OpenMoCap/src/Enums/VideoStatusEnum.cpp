@@ -12,3 +12,4 @@
 const VideoStatusEnum VideoStatusEnum::PLAY_LIVE("Play Live");
 const VideoStatusEnum VideoStatusEnum::RECORD("Record");
 const VideoStatusEnum VideoStatusEnum::STOP("Stop");
+const VideoStatusEnum VideoStatusEnum::CALIBRATE("Calibrate");

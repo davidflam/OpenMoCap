@@ -156,8 +156,7 @@ void KalmanFilter::refreshPOIsPosition(map<string, POI>& currentPOIs, vector<POI
 
 		}
 
-		logDEBUG("minDist: %d", minDist);
-		POI::fileOut << minDist << endl;
+		//logDEBUG("minDist: %d", minDist);
 
 		//--- Found correspondence
 		if (minDistIndex >= 0) { // Founded a valid point

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'StereoVisionCalibrationDialog.h'
 **
-** Created: Sat 12. Mar 10:18:47 2011
+** Created: Sun 15. May 13:32:46 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -43,8 +43,8 @@ static const uint qt_meta_data_StereoVisionCalibrationDialog[] = {
 static const char qt_meta_stringdata_StereoVisionCalibrationDialog[] = {
     "StereoVisionCalibrationDialog\0\0"
     "calibrate()\0value\0changeParameter(double)\0"
-    "beginRecordingPoints()\0stopRecordingPoints()\0"
-    "recordCalibrationPoint()\0"
+    "beginRecordingImages()\0stopRecordingImages()\0"
+    "recordCalibrationImage()\0"
 };
 
 const QMetaObject StereoVisionCalibrationDialog::staticMetaObject = {
@@ -78,9 +78,9 @@ int StereoVisionCalibrationDialog::qt_metacall(QMetaObject::Call _c, int _id, vo
         switch (_id) {
         case 0: calibrate(); break;
         case 1: changeParameter((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 2: beginRecordingPoints(); break;
-        case 3: stopRecordingPoints(); break;
-        case 4: recordCalibrationPoint(); break;
+        case 2: beginRecordingImages(); break;
+        case 3: stopRecordingImages(); break;
+        case 4: recordCalibrationImage(); break;
         default: ;
         }
         _id -= 5;

@@ -66,7 +66,6 @@ void AlphaBetaGammaFilter::refreshPOIsPosition(map<string, POI>& currentPOIs, ve
 		}
 
 		cout << "minDist: " << minDist << endl;
-		POI::fileOut << minDist << endl;
 
 		//--- Found correspondence
 		if (minDistIndex >= 0) {

@@ -210,7 +210,6 @@ int Mocap::run() {
 Mocap::~Mocap() {
 
 	releaseCameras();
-	POI::fileOut.close(); // Debug Pacheco
 	delete _mocapApp;
 }
 

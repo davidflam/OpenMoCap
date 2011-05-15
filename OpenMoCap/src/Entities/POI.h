@@ -23,6 +23,14 @@ public:
 	POI(CvPoint2D32f coordinates2d);
 
 	/*!
+	 * POI constructor with a CvPoint to initialize the 2D coordinates.
+	 *
+	 * @param coordinates2d 2D "POI" coordinates as a CvPoint.
+	 * @param isCalibrationPoint indicates if it is a calibration point, different drawing.
+	 */
+	POI(CvPoint2D32f coordinates2d, bool isCalibrationPoint);
+
+	/*!
 	 * POI constructor with two integers to initialize the 2D coordinates.
 	 *
 	 * @param x "POI" coordinate x.
@@ -203,8 +211,13 @@ public:
 		return this->_condensation;
 	}
 
-	//! Output file do debug purposes
-	static ofstream fileOut;
+	void setCalibrationPoint(bool isCalibrationPoint){
+		_calibrationPoint = isCalibrationPoint;
+	}
+
+	bool getCalibrationPoint(){
+		return _calibrationPoint;
+	}
 
 private:
 
@@ -235,6 +248,7 @@ private:
 	//! POI Condensation tracker
 	CvConDensation* _condensation;
 
+	bool _calibrationPoint;
 
 };
 

@@ -28,40 +28,35 @@ void VideoController::run() {
 
 	while (true) {
 
-		IplImage* currentFrame = NULL;
+		IplImage* currentFrame = _cameraRef->getFrame();
 		vector<POI> newPOIs;
 
 		if (_videoStatus == VideoStatusEnum::PLAY_LIVE) {
 
-			currentFrame = _cameraRef->getFrame();
 			newPOIs = _POIFinder->getPOIsInImage(currentFrame);
+			SetEvent(poiDetectionEndEvent);
+			suspend();
+			trackNewPOIs(newPOIs, currentFrame);
+			SetEvent(trackingEndEvent);
+			suspend();
 
 		} else if (_videoStatus == VideoStatusEnum::RECORD) {
 
-			//--- Record video...
-			currentFrame = _cameraRef->getFrame();
 			cvWriteFrame(_videoWriter, currentFrame);
-
 			_POIsImageWidgetRef->refreshImage(currentFrame, newPOIs);
+			SetEvent(poiDetectionEndEvent);
+			suspend();
+			SetEvent(trackingEndEvent);
+			suspend();
 
-		} else if (_videoStatus == VideoStatusEnum::STOP) {
+		} else if (_videoStatus == VideoStatusEnum::CALIBRATE) {
 
-			//--- Do nothing...
+			SetEvent(poiDetectionEndEvent);
+			suspend();
+			SetEvent(trackingEndEvent);
+			suspend();
 
-		} else {
-			logERROR("Unrecognized video status!");
 		}
-
-		SetEvent(poiDetectionEndEvent);
-		suspend();
-
-		if (_videoStatus == VideoStatusEnum::PLAY_LIVE) {
-			//--- POIs 2d tracking
-			trackNewPOIs(newPOIs, currentFrame);
-		}
-
-		SetEvent(trackingEndEvent);
-		suspend();
 
 	}
 }

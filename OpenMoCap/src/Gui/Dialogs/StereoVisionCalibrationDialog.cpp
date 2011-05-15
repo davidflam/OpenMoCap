@@ -7,17 +7,16 @@
 
 #include "StereoVisionCalibrationDialog.h"
 
-StereoVisionCalibrationDialog::StereoVisionCalibrationDialog(vector<AbstractCamera*>* camerasRef,
-		ThreeDWidget* modelVisualization) :
-	_camerasRef(camerasRef), _modelVisualizationRef(modelVisualization), _individuals(30.0f), _generations(1000.0f),
-			_differentialVariation(0.84f), _recombinationConstant(0.9f), _maxDepth(1.5f), _rotationMaxInDegrees(
-					90.0f), _focalLengthMax(1500.0f), _focalLengthMin(500.0f) {
+StereoVisionCalibrationDialog::StereoVisionCalibrationDialog(CaptureController* captureController) :
+	_captureControllerRef(captureController), _camerasRef(captureController->getMocap()->getCameras()),
+			_modelVisualizationRef(captureController->getVisualizationRef()), _numIntCornersRow(9.0f), _numIntCornersCol(6.0f), _differentialVariation(0.84f),
+			_recombinationConstant(0.9f), _maxDepth(1.5f), _rotationMaxInDegrees(90.0f), _focalLengthMax(1500.0f), _focalLengthMin(500.0f) {
 
 	QString windowTitle("Stereo Calibration");
 	setWindowTitle(windowTitle);
 
 	_mainLayout = new QVBoxLayout();
-	createCalibrationPointsBox();
+	createCalibrationImagesBox();
 	createAlgorithmParametersBox();
 	createCameraParametersBox();
 	createCalibrationBox();
@@ -26,7 +25,7 @@ StereoVisionCalibrationDialog::StereoVisionCalibrationDialog(vector<AbstractCame
 	setLayout(_mainLayout);
 
 	_recordPointsTimer = new QTimer(this);
-	connect(_recordPointsTimer, SIGNAL(timeout()), this, SLOT(recordCalibrationPoint()));
+	connect(_recordPointsTimer, SIGNAL(timeout()), this, SLOT(recordCalibrationImage()));
 
 }
 
@@ -37,11 +36,11 @@ void StereoVisionCalibrationDialog::calibrate() {
 
 	t.start();
 
-	DifferentialEvolutionCalibrator differentialEvolutionCalibrator(_camerasRef, _maxDepth,
-			_rotationMaxInDegrees * (CV_PI / 180), _focalLengthMin, _focalLengthMax);
+	DifferentialEvolutionCalibrator differentialEvolutionCalibrator(_camerasRef, _maxDepth, _rotationMaxInDegrees * (CV_PI / 180), _focalLengthMin,
+			_focalLengthMax);
 
-	vector<POI> POIs3d = differentialEvolutionCalibrator.calibrate(_individuals, _generations, _differentialVariation,
-			_recombinationConstant, cost, _calibrationPoints, _progresBar);
+	vector<POI> POIs3d = differentialEvolutionCalibrator.calibrate(_numIntCornersRow, _numIntCornersCol, _differentialVariation, _recombinationConstant, cost,
+			_calibrationPoints, _progresBar);
 
 	QString results = QString("Calibration ended in %1s\nBack projection error = %2\n").arg(t.stop()).arg(cost);
 	_resultsText->setText(results);
@@ -60,19 +59,19 @@ void StereoVisionCalibrationDialog::calibrate() {
 
 }
 
-void StereoVisionCalibrationDialog::createCalibrationPointsBox() {
+void StereoVisionCalibrationDialog::createCalibrationImagesBox() {
 
-	QString boxTitle("Calibration Points");
+	QString boxTitle("Calibration Images");
 	QGroupBox* calibrationPointsBox = new QGroupBox(boxTitle, this);
 	QGridLayout* calibrationPointsLayout = new QGridLayout(calibrationPointsBox);
 
-	_beginRecordingPointsButton = new QPushButton("Begin Recording Points", this);
-	connect(_beginRecordingPointsButton, SIGNAL(clicked()), this, SLOT(beginRecordingPoints()));
+	_beginRecordingPointsButton = new QPushButton("Begin Recording Images", this);
+	connect(_beginRecordingPointsButton, SIGNAL(clicked()), this, SLOT(beginRecordingImages()));
 	calibrationPointsLayout->addWidget(_beginRecordingPointsButton, 0, 0);
 
-	_stopRecordingPointsButton = new QPushButton("Stop Recording Points", this);
+	_stopRecordingPointsButton = new QPushButton("Stop Recording Images", this);
 	_stopRecordingPointsButton->setDisabled(true);
-	connect(_stopRecordingPointsButton, SIGNAL(clicked()), this, SLOT(stopRecordingPoints()));
+	connect(_stopRecordingPointsButton, SIGNAL(clicked()), this, SLOT(stopRecordingImages()));
 	calibrationPointsLayout->addWidget(_stopRecordingPointsButton, 0, 1);
 
 	_numberAvailablePointsLabel = new QLabel(this);
@@ -86,29 +85,29 @@ void StereoVisionCalibrationDialog::createCalibrationPointsBox() {
 
 void StereoVisionCalibrationDialog::createAlgorithmParametersBox() {
 
-	QString boxTitle("Differential Evolution Parameters");
+	QString boxTitle("Chessboard Parameters");
 	QGroupBox* algorithmParametersBox = new QGroupBox(boxTitle, this);
 	QGridLayout* algorithmParametersLayout = new QGridLayout(algorithmParametersBox);
 
-	_individualsSpinBox = new QDoubleSpinBox(algorithmParametersBox);
-	_individualsSpinBox->setRange(10.0f, 50.0f);
-	_individualsSpinBox->setSingleStep(1.0f);
-	_individualsSpinBox->setDecimals(0);
-	_individualsSpinBox->setValue(_individuals);
-	connect(_individualsSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
-	QLabel* individualsLabel = new QLabel("Individuals");
-	algorithmParametersLayout->addWidget(individualsLabel, 0, 0);
-	algorithmParametersLayout->addWidget(_individualsSpinBox, 0, 1);
+	_numIntCornersRowSpinBox = new QDoubleSpinBox(algorithmParametersBox);
+	_numIntCornersRowSpinBox->setRange(3.0f, 12.0f);
+	_numIntCornersRowSpinBox->setSingleStep(1.0f);
+	_numIntCornersRowSpinBox->setDecimals(0);
+	_numIntCornersRowSpinBox->setValue(_numIntCornersRow);
+	connect(_numIntCornersRowSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
+	QLabel* numIntCornersRowLabel = new QLabel("Number of Internal Corners (Row)");
+	algorithmParametersLayout->addWidget(numIntCornersRowLabel, 0, 0);
+	algorithmParametersLayout->addWidget(_numIntCornersRowSpinBox, 0, 1);
 
-	_generationsSpinBox = new QDoubleSpinBox(algorithmParametersBox);
-	_generationsSpinBox->setRange(1.0f, 20000.0f);
-	_generationsSpinBox->setSingleStep(10.0f);
-	_generationsSpinBox->setDecimals(0);
-	_generationsSpinBox->setValue(_generations);
-	connect(_generationsSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
-	QLabel* generationsLabel = new QLabel("Generations");
-	algorithmParametersLayout->addWidget(generationsLabel, 0, 2);
-	algorithmParametersLayout->addWidget(_generationsSpinBox, 0, 3);
+	_numIntCornersColSpinBox = new QDoubleSpinBox(algorithmParametersBox);
+	_numIntCornersColSpinBox->setRange(3.0f, 12.0f);
+	_numIntCornersColSpinBox->setSingleStep(1.0f);
+	_numIntCornersColSpinBox->setDecimals(0);
+	_numIntCornersColSpinBox->setValue(_numIntCornersCol);
+	connect(_numIntCornersColSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
+	QLabel* numIntCornersColLabel = new QLabel("Number of Internal Corners (Column)");
+	algorithmParametersLayout->addWidget(numIntCornersColLabel, 0, 2);
+	algorithmParametersLayout->addWidget(_numIntCornersColSpinBox, 0, 3);
 
 	_differentialVariationSpinBox = new QDoubleSpinBox(algorithmParametersBox);
 	_differentialVariationSpinBox->setRange(0.30f, 0.90f);
@@ -199,7 +198,7 @@ void StereoVisionCalibrationDialog::createCalibrationBox() {
 
 	_progresBar = new QProgressBar(this);
 	_progresBar->setMinimum(0);
-	_progresBar->setMaximum(_generations - 1);
+	_progresBar->setMaximum(_numIntCornersCol - 1);
 	calibrationBoxLayout->addWidget(_progresBar);
 
 	calibrationBox->setLayout(calibrationBoxLayout);
@@ -214,10 +213,10 @@ void StereoVisionCalibrationDialog::changeParameter(double value) {
 
 	QObject* senderObject = sender();
 
-	if (senderObject == _individualsSpinBox) {
-		_individuals = value;
-	} else if (senderObject == _generationsSpinBox) {
-		_generations = value;
+	if (senderObject == _numIntCornersRowSpinBox) {
+		_numIntCornersRow = value;
+	} else if (senderObject == _numIntCornersColSpinBox) {
+		_numIntCornersCol = value;
 		_progresBar->setMaximum(value - 1);
 	} else if (senderObject == _differentialVariationSpinBox) {
 		_differentialVariation = value;
@@ -234,10 +233,14 @@ void StereoVisionCalibrationDialog::changeParameter(double value) {
 	}
 }
 
-void StereoVisionCalibrationDialog::beginRecordingPoints() {
+void StereoVisionCalibrationDialog::beginRecordingImages() {
 
 	_calibrationPoints.clear();
 	for (unsigned int i = 0; i < _camerasRef->size(); i++) {
+
+		VideoController* videoControllerRef = _captureControllerRef->getVideoController(i);
+		videoControllerRef->setVideoStatus(VideoStatusEnum::CALIBRATE);
+
 		map<string, POI> points;
 		_calibrationPoints.push_back(points);
 	}
@@ -247,11 +250,17 @@ void StereoVisionCalibrationDialog::beginRecordingPoints() {
 
 	_beginRecordingPointsButton->setDisabled(true);
 	_stopRecordingPointsButton->setEnabled(true);
-	_recordPointsTimer->start(200);
+	_recordPointsTimer->start(MSEC_BETWEEN_CALIB_IMAGES);
 
 }
 
-void StereoVisionCalibrationDialog::stopRecordingPoints() {
+void StereoVisionCalibrationDialog::stopRecordingImages() {
+
+	for (unsigned int i = 0; i < _camerasRef->size(); i++) {
+
+		VideoController* videoControllerRef = _captureControllerRef->getVideoController(i);
+		videoControllerRef->setVideoStatus(VideoStatusEnum::PLAY_LIVE);
+	}
 
 	_beginRecordingPointsButton->setEnabled(true);
 	_stopRecordingPointsButton->setDisabled(true);
@@ -263,19 +272,9 @@ void StereoVisionCalibrationDialog::stopRecordingPoints() {
 
 }
 
-void StereoVisionCalibrationDialog::recordCalibrationPoint() {
+void StereoVisionCalibrationDialog::recordCalibrationImage() {
 
-	if (areCamerasStateValidForCalibrationPointRecording(_camerasRef)) {
-
-		for (unsigned int i = 0; i < _camerasRef->size(); i++) {
-			POI poi = _camerasRef->at(i)->getPOIs().begin()->second;
-
-			QString semantic = QString("%1%2").arg(poi.getSemantic()).arg(_numCalibrationPoints);
-			poi.setSemantic(semantic);
-
-			(_calibrationPoints[i])[poi.getSemantic().toStdString()] = poi;
-
-		}
+	if (areCamerasStateValidForCalibrationPointRecording()) {
 
 		_numCalibrationPoints++;
 		refreshAvailableCalibrationPointsLabel();
@@ -291,28 +290,31 @@ void StereoVisionCalibrationDialog::refreshAvailableCalibrationPointsLabel() {
 
 }
 
-bool StereoVisionCalibrationDialog::areCamerasStateValidForCalibrationPointRecording(
-		vector<AbstractCamera*>* camerasRef) {
+bool StereoVisionCalibrationDialog::areCamerasStateValidForCalibrationPointRecording() {
 
 	//--- Stereo Calibration Validation
 	bool validCalibrationState = true;
-	QString selectedSemantic = "";
 
-	if (camerasRef->at(0)->getPOIs().size() > 0) {
-		selectedSemantic = camerasRef->at(0)->getPOIs().begin()->second.getSemantic();
-	}
+	CvSize patternSize = cvSize(_numIntCornersRowSpinBox->value(), _numIntCornersColSpinBox->value());
+	int numCorners = _numIntCornersRowSpinBox->value() * _numIntCornersColSpinBox->value();
+	CvPoint2D32f* corners = new CvPoint2D32f[numCorners];
 
-	for (unsigned int i = 0; i < camerasRef->size(); i++) {
+	for (unsigned int i = 0; i < _camerasRef->size(); i++) {
+		vector<POI> newPOIs;
 
-		map<string, POI> cameraPOIs = camerasRef->at(i)->getPOIs();
+		IplImage* currentFrame = _camerasRef->at(i)->getFrame();
 
-		//--- Just one POI with semantic
-		if (cameraPOIs.size() != 1) {
-			validCalibrationState = false;
-			//--- Every semantic must be lexically equal
-		} else if (cameraPOIs[selectedSemantic.toStdString()].getSemantic().compare(selectedSemantic) != 0) {
+		if ( cvFindChessboardCorners(currentFrame, patternSize, corners, NULL, CV_CALIB_CB_ADAPTIVE_THRESH) ) {
+			for(int k = 0; k < numCorners; k++) {
+				newPOIs.push_back(POI(corners[k], true));
+			}
+		} else {
 			validCalibrationState = false;
 		}
+
+		VideoController* videoControllerRef = _captureControllerRef->getVideoController(i);
+		videoControllerRef->getPOIsImageWidgetRef()->refreshImage(currentFrame, newPOIs);
+
 	}
 
 	return validCalibrationState;

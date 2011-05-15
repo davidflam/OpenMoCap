@@ -42,7 +42,7 @@ public:
 		return _videoStatus;
 	}
 
-	POIsImageWidget *getPOIsImageWidgetRef() const {
+	POIsImageWidget* getPOIsImageWidgetRef() const {
 		return _POIsImageWidgetRef;
 	}
 

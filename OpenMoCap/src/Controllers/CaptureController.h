@@ -96,6 +96,14 @@ public:
 		return _visualizationRef;
 	}
 
+	Mocap* getMocap() {
+		return _mocapRef;
+	}
+
+	VideoController* getVideoController(int cameraIndex) {
+		return _videoControllersRef[cameraIndex];
+	}
+
 private:
 
 	//! Capture time.

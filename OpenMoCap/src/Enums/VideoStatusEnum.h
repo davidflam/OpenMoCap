@@ -36,6 +36,11 @@ public:
 	 */
 	const static VideoStatusEnum RECORD;
 
+	/*!
+	 * Inserts the item "CALIBRATE" into the enumeration.
+	 */
+	const static VideoStatusEnum CALIBRATE;
+
 };
 
 #endif /* VIDEOSTATUSENUM_H_ */
