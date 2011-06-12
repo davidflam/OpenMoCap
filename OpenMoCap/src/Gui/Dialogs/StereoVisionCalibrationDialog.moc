@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'StereoVisionCalibrationDialog.h'
 **
-** Created: Sun 15. May 13:32:46 2011
+** Created: Sun 12. Jun 09:52:45 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_StereoVisionCalibrationDialog[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,19 +32,20 @@ static const uint qt_meta_data_StereoVisionCalibrationDialog[] = {
 
  // slots: signature, parameters, type, tag, flags
       31,   30,   30,   30, 0x08,
-      49,   43,   30,   30, 0x08,
-      73,   30,   30,   30, 0x08,
-      96,   30,   30,   30, 0x08,
-     118,   30,   30,   30, 0x08,
+      43,   30,   30,   30, 0x08,
+      70,   64,   30,   30, 0x08,
+      94,   30,   30,   30, 0x08,
+     117,   30,   30,   30, 0x08,
+     139,   30,   30,   30, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_StereoVisionCalibrationDialog[] = {
     "StereoVisionCalibrationDialog\0\0"
-    "calibrate()\0value\0changeParameter(double)\0"
-    "beginRecordingImages()\0stopRecordingImages()\0"
-    "recordCalibrationImage()\0"
+    "calibrate()\0calibrateExtrinsic()\0value\0"
+    "changeParameter(double)\0beginRecordingImages()\0"
+    "stopRecordingImages()\0recordCalibrationImage()\0"
 };
 
 const QMetaObject StereoVisionCalibrationDialog::staticMetaObject = {
@@ -77,13 +78,14 @@ int StereoVisionCalibrationDialog::qt_metacall(QMetaObject::Call _c, int _id, vo
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: calibrate(); break;
-        case 1: changeParameter((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 2: beginRecordingImages(); break;
-        case 3: stopRecordingImages(); break;
-        case 4: recordCalibrationImage(); break;
+        case 1: calibrateExtrinsic(); break;
+        case 2: changeParameter((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 3: beginRecordingImages(); break;
+        case 4: stopRecordingImages(); break;
+        case 5: recordCalibrationImage(); break;
         default: ;
         }
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }

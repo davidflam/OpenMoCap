@@ -4,6 +4,8 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
+#include "Log.h"
+
 using namespace std;
 
 class Debug {
@@ -64,6 +66,24 @@ public:
 	 * @param size The array size.
 	 */
 	static void printArrayCvPoint3D32f(CvPoint3D32f *array, int size);
+
+	static void printCvMat(CvMat* mat, string name);
+
+	static inline string stringify(double x) {
+		ostringstream o;
+		if (!(o << x)) {
+			return "";
+		}
+		return o.str();
+	}
+
+	static inline string stringify(int x) {
+		ostringstream o;
+		if (!(o << x)) {
+			return "";
+		}
+		return o.str();
+	}
 };
 
 #endif /* DEBUG_H_ */

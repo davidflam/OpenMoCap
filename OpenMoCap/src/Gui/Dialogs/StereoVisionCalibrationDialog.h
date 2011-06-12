@@ -23,8 +23,8 @@
 #include <QProgressBar>
 #include <vector>
 
+#include "../../Utils/Debug.h"
 #include "../Widgets/ThreeDWidget.h"
-#include "../../Calibration/DifferentialEvolutionCalibrator.h"
 #include "../../Controllers/CaptureController.h"
 
 using namespace std;
@@ -40,6 +40,7 @@ public:
     bool foundValidCornersForStereoCalibration();
 private slots:
     void calibrate();
+    void calibrateExtrinsic();
     void changeParameter(double value);
     void beginRecordingImages();
     void stopRecordingImages();
@@ -49,11 +50,13 @@ private:
     vector<AbstractCamera*> *_camerasRef;
     ThreeDWidget *_modelVisualizationRef;
     vector<POI> _calibrationPoints;
+
     QVBoxLayout *_mainLayout;
     QLabel *_numberAvailablePointsLabel;
     QPushButton *_beginRecordingPointsButton;
     QPushButton *_stopRecordingPointsButton;
     void createCalibrationImagesBox();
+
     QDoubleSpinBox *_numIntCornersRowSpinBox;
     double _numIntCornersRow;
     QDoubleSpinBox *_numIntCornersColSpinBox;
@@ -63,18 +66,12 @@ private:
     QDoubleSpinBox *_calibrationPatternHeightSpinBox;
     double _calibrationPatternHeight;
     void createAlgorithmParametersBox();
-    QDoubleSpinBox *_maxDepthSpinBox;
-    double _maxDepth;
-    QDoubleSpinBox *_rotationMaxSpinBox;
-    double _rotationMaxInDegrees;
-    QDoubleSpinBox *_focalLengthMaxSpinBox;
-    double _focalLengthMax;
-    QDoubleSpinBox *_focalLengthMinSpinBox;
-    double _focalLengthMin;
-    void createCameraParametersBox();
+
     QPushButton *_calibrateButton;
+    QPushButton *_calibrateExtrinsicButton;
     QProgressBar *_progresBar;
     void createCalibrationBox();
+
     QTextEdit *_resultsText;
     void refreshAvailableCalibrationPointsLabel();
     QTimer* _recordPointsTimer;

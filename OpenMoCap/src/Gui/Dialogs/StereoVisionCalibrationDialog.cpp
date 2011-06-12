@@ -8,9 +8,9 @@
 #include "StereoVisionCalibrationDialog.h"
 
 StereoVisionCalibrationDialog::StereoVisionCalibrationDialog(CaptureController* captureController) :
-	_captureControllerRef(captureController), _camerasRef(captureController->getMocap()->getCameras()),
-			_modelVisualizationRef(captureController->getVisualizationRef()), _numIntCornersRow(9.0f), _numIntCornersCol(6.0f), _calibrationPatternWidth(2.5f),
-			_calibrationPatternHeight(2.5f), _maxDepth(1.5f), _rotationMaxInDegrees(90.0f), _focalLengthMax(1500.0f), _focalLengthMin(500.0f) {
+	_captureControllerRef(captureController), _camerasRef(captureController->getMocap()->getCameras())
+	,_modelVisualizationRef(captureController->getVisualizationRef()), _numIntCornersRow(9.0f), _numIntCornersCol(6.0f)
+	, _calibrationPatternWidth(2.5f), _calibrationPatternHeight(2.5f) {
 
 	QString windowTitle("Stereo Calibration");
 	setWindowTitle(windowTitle);
@@ -18,7 +18,6 @@ StereoVisionCalibrationDialog::StereoVisionCalibrationDialog(CaptureController* 
 	_mainLayout = new QVBoxLayout();
 	createCalibrationImagesBox();
 	createAlgorithmParametersBox();
-	createCameraParametersBox();
 	createCalibrationBox();
 
 	_mainLayout->setSizeConstraint(QLayout::SetFixedSize);
@@ -32,16 +31,117 @@ StereoVisionCalibrationDialog::StereoVisionCalibrationDialog(CaptureController* 
 void StereoVisionCalibrationDialog::calibrate() {
 
 	Timer t;
-	double cost = 0;
-
 	t.start();
 
-	QString results = QString("Calibration ended in %1s\nBack projection error = %2\n").arg(t.stop()).arg(cost);
+	int numCameras =  2;
+	int numCorners = (int)_numIntCornersCol * (int)_numIntCornersRow;
+	int numSamples = _calibrationPoints.size() / ( numCameras * numCorners);
+	int numPoints = numCorners * numSamples;
+	int imageWidth = _captureControllerRef->getMocap()->getCameraResolutionWidth();
+	int imageHeight = _captureControllerRef->getMocap()->getCameraResolutionHeight();
+
+	logDEBUG("Calibration started with %d sample(s).", numSamples);
+
+    CvMat* M1 = cvCreateMat(3, 3, CV_64F);
+    CvMat* M2 = cvCreateMat(3, 3, CV_64F);
+    CvMat* D1 = cvCreateMat(1, 5, CV_64F);
+    CvMat* D2 = cvCreateMat(1, 5, CV_64F);
+    CvMat* R = cvCreateMat(3, 3, CV_64F);
+    CvMat* T = cvCreateMat(3, 1, CV_64F);
+    CvMat* E = cvCreateMat(3, 3, CV_64F);
+    CvMat* F = cvCreateMat(3, 3, CV_64F);
+
+    vector<CvPoint3D32f> objectPoints (numPoints);
+
+	//-- Object Points
+    for(int k = 0; k < numSamples; k++) {
+
+        for(int i = 0; i < (int)_numIntCornersRow; i++ ) {
+        	 for(int j = 0; j < (int)_numIntCornersCol; j++ ) {
+
+        		 CvPoint3D32f objectPoint = cvPoint3D32f(i * _calibrationPatternWidth, j * _calibrationPatternHeight, 0);
+        		 objectPoints[(k * numCorners) + (i * (int)_numIntCornersCol) + j] = objectPoint;
+
+        	 }
+        }
+    }
+
+    //--- Point Counts
+	int* pointCounts = new int[numSamples];
+	for (int i = 0; i < numSamples; i++) {
+		pointCounts[i] = numCorners;
+	}
+
+    vector<CvPoint2D32f> imagePoints[numCameras];
+    int currentCamera = -1;
+
+	for (unsigned int i = 0; i < _calibrationPoints.size(); i++) {
+
+		if (i % numCorners == 0) {
+			if (++currentCamera >= numCameras) {
+				currentCamera = 0;
+			}
+		}
+
+		POI poi = _calibrationPoints[i];
+		imagePoints[currentCamera].push_back(poi.getCoordinates2d());
+	}
+
+
+	logDEBUG("Before Calibration");
+
+	CvMat _objectPoints = cvMat(1, numPoints, CV_32FC3, &objectPoints[0]);
+	Debug::printCvMat(&_objectPoints, "-==Object Points==-");
+
+	CvMat _imagePoints1 = cvMat(1, numPoints, CV_32FC2, &imagePoints[0][0]);
+	Debug::printCvMat(&_imagePoints1, "-==Image Points 1==-");
+
+	CvMat _imagePoints2 = cvMat(1, numPoints, CV_32FC2, &imagePoints[1][0]);
+	Debug::printCvMat(&_imagePoints2, "-==Image Points 2==-");
+
+	CvMat _pointCounts = cvMat(1, numSamples, CV_32SC1, pointCounts);
+	Debug::printCvMat(&_pointCounts, "-==Point Counts==-");
+
+	cvSetIdentity(M1);
+	cvSetIdentity(M2);
+	cvZero(D1);
+	cvZero(D2);
+
+    //CALIBRATE THE STEREO CAMERAS
+    double reprojectionError = cvStereoCalibrate( &_objectPoints, &_imagePoints1, &_imagePoints2, &_pointCounts, M1, D1, M2, D2
+    		, cvSize(imageWidth, imageHeight)
+    		, R, T, E, F
+    		, cvTermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 100, 1e-5)
+    		, CV_CALIB_SAME_FOCAL_LENGTH + CV_CALIB_ZERO_TANGENT_DIST
+    );
+
+	float processingTime = t.stop();
+	QString results = QString("Calibration ended in %1s\nBack projection error = %2\n").arg(processingTime).arg(reprojectionError);
 	_resultsText->setText(results);
+	logDEBUG("Calibration ended in %.2fs. Back projection error = %.2fpx", processingTime, reprojectionError);
+
+	Debug::printCvMat(M1, "-==M1==-");
+	_camerasRef->at(0)->setIntrinsicParams(M1);
+	Debug::printCvMat(M2, "-==M2==-");
+	_camerasRef->at(1)->setIntrinsicParams(M2);
+	Debug::printCvMat(D1, "-==D1==-");
+	_camerasRef->at(0)->setDistortionCoefficients(D1);
+	Debug::printCvMat(D2, "-==D2==-");
+	_camerasRef->at(1)->setDistortionCoefficients(D2);
+	Debug::printCvMat(R, "-==R==-");
+	Debug::printCvMat(T, "-==T==-");
+	Debug::printCvMat(E, "-==E==-");
+	Debug::printCvMat(F, "-==F==-");
 
 	for (unsigned int i = 0; i < _camerasRef->size(); i++) {
 		_resultsText->append((_camerasRef->at(i))->getInfo());
 	}
+
+}
+
+void StereoVisionCalibrationDialog::calibrateExtrinsic() {
+
+	calibrate();
 
 }
 
@@ -119,67 +219,20 @@ void StereoVisionCalibrationDialog::createAlgorithmParametersBox() {
 
 }
 
-void StereoVisionCalibrationDialog::createCameraParametersBox() {
-
-	QString boxTitle("Camera Parameters");
-	QGroupBox* cameraParametersBox = new QGroupBox(boxTitle, this);
-	QGridLayout* cameraParametersLayout = new QGridLayout(cameraParametersBox);
-
-	_maxDepthSpinBox = new QDoubleSpinBox(cameraParametersBox);
-	_maxDepthSpinBox->setRange(0.1f, 10.0f);
-	_maxDepthSpinBox->setSingleStep(0.1f);
-	_maxDepthSpinBox->setDecimals(1);
-	_maxDepthSpinBox->setValue(_maxDepth);
-	connect(_maxDepthSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
-	QLabel* maxDepthLabel = new QLabel("Max Depth");
-	cameraParametersLayout->addWidget(maxDepthLabel, 0, 0);
-	cameraParametersLayout->addWidget(_maxDepthSpinBox, 0, 1);
-
-	_rotationMaxSpinBox = new QDoubleSpinBox(cameraParametersBox);
-	_rotationMaxSpinBox->setRange(0.0f, 360.0f);
-	_rotationMaxSpinBox->setSingleStep(1.0f);
-	_rotationMaxSpinBox->setDecimals(0);
-	_rotationMaxSpinBox->setValue(_rotationMaxInDegrees);
-	connect(_rotationMaxSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
-	QLabel* rotationMaxLabel = new QLabel("Max Rotation (Degrees)");
-	cameraParametersLayout->addWidget(rotationMaxLabel, 0, 2);
-	cameraParametersLayout->addWidget(_rotationMaxSpinBox, 0, 3);
-
-	_focalLengthMinSpinBox = new QDoubleSpinBox(cameraParametersBox);
-	_focalLengthMinSpinBox->setRange(0.0f, 1000.0f);
-	_focalLengthMinSpinBox->setSingleStep(25.0f);
-	_focalLengthMinSpinBox->setDecimals(0);
-	_focalLengthMinSpinBox->setValue(_focalLengthMin);
-	connect(_focalLengthMinSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
-	QLabel* focalLengthMinLabel = new QLabel("Min Focal Length (Pixels)");
-	cameraParametersLayout->addWidget(focalLengthMinLabel, 1, 0);
-	cameraParametersLayout->addWidget(_focalLengthMinSpinBox, 1, 1);
-
-	_focalLengthMaxSpinBox = new QDoubleSpinBox(cameraParametersBox);
-	_focalLengthMaxSpinBox->setRange(200.0f, 30000.0f);
-	_focalLengthMaxSpinBox->setSingleStep(25.0f);
-	_focalLengthMaxSpinBox->setDecimals(0);
-	_focalLengthMaxSpinBox->setValue(_focalLengthMax);
-	connect(_focalLengthMaxSpinBox, SIGNAL(valueChanged(double)), this, SLOT(changeParameter(double)));
-	QLabel* focalLengthMaxLabel = new QLabel("Max Focal Length (Pixels)");
-	cameraParametersLayout->addWidget(focalLengthMaxLabel, 1, 2);
-	cameraParametersLayout->addWidget(_focalLengthMaxSpinBox, 1, 3);
-
-	cameraParametersBox->setLayout(cameraParametersLayout);
-	_mainLayout->addWidget(cameraParametersBox);
-
-}
-
 void StereoVisionCalibrationDialog::createCalibrationBox() {
 
 	QGroupBox* calibrationBox = new QGroupBox(this);
 	QHBoxLayout* calibrationBoxLayout = new QHBoxLayout(calibrationBox);
 
-	QString calibrateButtonText("Calibrate");
-	_calibrateButton = new QPushButton(calibrateButtonText, this);
+	_calibrateButton = new QPushButton(QString("Calibrate"), this);
 	_calibrateButton->setDisabled(true);
 	connect(_calibrateButton, SIGNAL(clicked()), this, SLOT(calibrate()));
 	calibrationBoxLayout->addWidget(_calibrateButton);
+
+	_calibrateExtrinsicButton = new QPushButton(QString("Calibrate Extrinsic"), this);
+	_calibrateExtrinsicButton->setDisabled(true);
+	connect(_calibrateExtrinsicButton, SIGNAL(clicked()), this, SLOT(calibrateExtrinsic()));
+	calibrationBoxLayout->addWidget(_calibrateExtrinsicButton);
 
 	_progresBar = new QProgressBar(this);
 	_progresBar->setMinimum(0);
@@ -207,14 +260,6 @@ void StereoVisionCalibrationDialog::changeParameter(double value) {
 		_calibrationPatternWidth = value;
 	} else if (senderObject == _calibrationPatternHeightSpinBox) {
 		_calibrationPatternHeight = value;
-	} else if (senderObject == _maxDepthSpinBox) {
-		_maxDepth = value;
-	} else if (senderObject == _rotationMaxSpinBox) {
-		_rotationMaxInDegrees = value;
-	} else if (senderObject == _focalLengthMaxSpinBox) {
-		_focalLengthMax = value;
-	} else {
-		_focalLengthMin = value;
 	}
 }
 
@@ -249,6 +294,7 @@ void StereoVisionCalibrationDialog::stopRecordingImages() {
 
 	if (_calibrationPoints.size() > 0) {
 		_calibrateButton->setEnabled(true);
+		_calibrateExtrinsicButton->setEnabled(true);
 	}
 
 }
@@ -295,20 +341,12 @@ bool StereoVisionCalibrationDialog::foundValidCornersForStereoCalibration() {
 
 		if ( cvFindChessboardCorners(grayImage, patternSize, corners, &numDetectedCorners, CV_CALIB_CB_ADAPTIVE_THRESH) && numDetectedCorners == numCorners ) {
 
-			cvFindCornerSubPix(
-						grayImage,
-						corners,
-						numCorners,
-						cvSize(5, 5),
-						cvSize(-1, -1),
-						cvTermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 10, 0.1)
-					);
+			cvFindCornerSubPix(grayImage, corners, numCorners, cvSize(5, 5), cvSize(-1, -1), cvTermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 10, 0.1));
 
 			for(int k = 0; k < numCorners; k++) {
 				POI calibrationPoint(corners[k], true);
 				newPOIs.push_back(calibrationPoint);
 				_calibrationPoints.push_back(calibrationPoint);
-
 			}
 		} else {
 			foundValidCornersForStereoCalibration = false;
