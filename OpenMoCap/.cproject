@@ -54,17 +54,17 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.54700093" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug"/>
 							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1268394906" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug">
 								<option id="gnu.cpp.link.option.libs.662726775" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" value="opencv_core220"/>
+									<listOptionValue builtIn="false" value="opencv_core231"/>
 									<listOptionValue builtIn="false" value="videoInput"/>
-									<listOptionValue builtIn="false" value="opencv_legacy220"/>
-									<listOptionValue builtIn="false" value="opencv_contrib220"/>
-									<listOptionValue builtIn="false" value="opencv_objdetect220"/>
-									<listOptionValue builtIn="false" value="opencv_highgui220"/>
-									<listOptionValue builtIn="false" value="opencv_ml220"/>
-									<listOptionValue builtIn="false" value="opencv_features2d220"/>
-									<listOptionValue builtIn="false" value="opencv_video220"/>
-									<listOptionValue builtIn="false" value="opencv_calib3d220"/>
-									<listOptionValue builtIn="false" value="opencv_imgproc220"/>
+									<listOptionValue builtIn="false" value="opencv_legacy231"/>
+									<listOptionValue builtIn="false" value="opencv_contrib231"/>
+									<listOptionValue builtIn="false" value="opencv_objdetect231"/>
+									<listOptionValue builtIn="false" value="opencv_highgui231"/>
+									<listOptionValue builtIn="false" value="opencv_ml231"/>
+									<listOptionValue builtIn="false" value="opencv_features2d231"/>
+									<listOptionValue builtIn="false" value="opencv_video231"/>
+									<listOptionValue builtIn="false" value="opencv_calib3d231"/>
+									<listOptionValue builtIn="false" value="opencv_imgproc231"/>
 									<listOptionValue builtIn="false" value="ole32"/>
 									<listOptionValue builtIn="false" value="oleaut32"/>
 									<listOptionValue builtIn="false" value="ddraw"/>
