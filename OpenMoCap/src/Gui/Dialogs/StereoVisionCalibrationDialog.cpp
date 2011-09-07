@@ -87,7 +87,6 @@ void StereoVisionCalibrationDialog::calibrate() {
 		imagePoints[currentCamera].push_back(poi.getCoordinates2d());
 	}
 
-
 	logDEBUG("Before Calibration");
 
 	CvMat _objectPoints = cvMat(1, numPoints, CV_32FC3, &objectPoints[0]);
@@ -116,34 +115,6 @@ void StereoVisionCalibrationDialog::calibrate() {
     );
 
 	float processingTime = t.stop();
-
-	Debug::printCvMat(M1, "-==M1==-");
-	_camerasRef->at(0)->setIntrinsicParams(M1);
-    cvSave("M1.xml", M1);
-
-	Debug::printCvMat(M2, "-==M2==-");
-	_camerasRef->at(1)->setIntrinsicParams(M2);
-    cvSave("M2.xml", M2);
-
-	Debug::printCvMat(D1, "-==D1==-");
-	_camerasRef->at(0)->setDistortionCoefficients(D1);
-    cvSave("D1.xml", D1);
-
-	Debug::printCvMat(D2, "-==D2==-");
-	_camerasRef->at(1)->setDistortionCoefficients(D2);
-    cvSave("D2.xml", D2);
-
-	Debug::printCvMat(R, "-==R==-");
-    cvSave("R.xml", R);
-
-	Debug::printCvMat(T, "-==T==-");
-    cvSave("T.xml", T);
-
-	Debug::printCvMat(E, "-==E==-");
-    cvSave("E.xml", E);
-
-	Debug::printCvMat(F, "-==F==-");
-    cvSave("F.xml", F);
 
 	// CALIBRATION QUALITY CHECK
 	// because the output fundamental matrix implicitly
@@ -176,13 +147,46 @@ void StereoVisionCalibrationDialog::calibrate() {
 	}
 	reprojectionError = reprojectionError /( numSamples * numCorners );
 
-	QString results = QString("Calibration ended in %1s\nBack projection error = %2\n").arg(processingTime).arg(reprojectionError);
+	//--- Computes disparity-to-depth mapping matrix Q
+	//--- BOUGUET'S METHOD
+
+	double R1[3][3], R2[3][3], P1[3][4], P2[3][4];
+    double Q[4][4];
+
+    CvMat _R1 = cvMat(3, 3, CV_64F, R1);
+    CvMat _R2 = cvMat(3, 3, CV_64F, R2);
+    CvMat _P1 = cvMat(3, 4, CV_64F, P1);
+    CvMat _P2 = cvMat(3, 4, CV_64F, P2);
+    CvMat _Q = cvMat(4,4, CV_64F, Q);
+
+    cvStereoRectify(M1, M2, D1, D2, cvSize(imageWidth, imageHeight), R, T, &_R1, &_R2, &_P1, &_P2, &_Q, 0/*CV_CALIB_ZERO_DISPARITY*/ );
+
+    CvMat* mx1 = cvCreateMat( imageHeight, imageWidth, CV_32F );
+    CvMat* my1 = cvCreateMat( imageHeight, imageWidth, CV_32F );
+    CvMat* mx2 = cvCreateMat( imageHeight, imageWidth, CV_32F );
+    CvMat* my2 = cvCreateMat( imageHeight, imageWidth, CV_32F );
+
+    //--- Precompute maps for cvRemap()
+    cvInitUndistortRectifyMap(M1, D1, &_R1, &_P1, mx1, my1);
+    cvInitUndistortRectifyMap(M2, D2, &_R2, &_P2, mx2, my2);
+
+    cvSave("Q.xml", &_Q);
+	_camerasRef->at(0)->setDisparityToDepth(_Q);
+	_camerasRef->at(1)->setDisparityToDepth(_Q);
+
+    cvSave("mx1.xml", mx1);
+	_camerasRef->at(0)->setDistortionModelX(*mx1);
+    cvSave("my1.xml", my1);
+	_camerasRef->at(0)->setDistortionModelY(*my1);
+
+    cvSave("mx2.xml", mx2);
+	_camerasRef->at(1)->setDistortionModelX(*mx2);
+    cvSave("my2.xml", my2);
+	_camerasRef->at(1)->setDistortionModelY(*my2);
+
+	QString results = QString("Calibration ended in %1s\nBack projection error = %2px\n").arg(processingTime).arg(reprojectionError);
 	_resultsText->setText(results);
 	logDEBUG("Calibration ended in %.2fs. Back projection error = %.2fpx", processingTime, reprojectionError);
-
-	for (unsigned int i = 0; i < _camerasRef->size(); i++) {
-		_resultsText->append((_camerasRef->at(i))->getInfo());
-	}
 
 }
 

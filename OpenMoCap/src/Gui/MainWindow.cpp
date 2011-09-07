@@ -21,6 +21,9 @@ void MainWindow::about() {
 		"Daniel Pacheco de Queiroz, "
 		"Laerte Mateus Rodrigues, "
 		"Thatyene Louise Alves de Souza Ramos."
+	    "<h4>Our Thanks To</h4>"
+	    "Martin Peris, "
+	    "Willow Garage. "
 	 	"</div>")
 	);
 }
