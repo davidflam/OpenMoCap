@@ -108,7 +108,7 @@ void StereoVisionCalibrationDialog::calibrate() {
 	cvZero(D2);
 
     //CALIBRATE THE STEREO CAMERAS
-    double reprojectionError = cvStereoCalibrate( &_objectPoints, &_imagePoints1, &_imagePoints2, &_pointCounts, M1, D1, M2, D2
+    double rmsError = cvStereoCalibrate( &_objectPoints, &_imagePoints1, &_imagePoints2, &_pointCounts, M1, D1, M2, D2
     		, cvSize(imageWidth, imageHeight)
     		, R, T, E, F
     		, cvTermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 100, 1e-5)
@@ -116,22 +116,69 @@ void StereoVisionCalibrationDialog::calibrate() {
     );
 
 	float processingTime = t.stop();
-	QString results = QString("Calibration ended in %1s\nBack projection error = %2\n").arg(processingTime).arg(reprojectionError);
-	_resultsText->setText(results);
-	logDEBUG("Calibration ended in %.2fs. Back projection error = %.2fpx", processingTime, reprojectionError);
 
 	Debug::printCvMat(M1, "-==M1==-");
 	_camerasRef->at(0)->setIntrinsicParams(M1);
+    cvSave("M1.xml", M1);
+
 	Debug::printCvMat(M2, "-==M2==-");
 	_camerasRef->at(1)->setIntrinsicParams(M2);
+    cvSave("M2.xml", M2);
+
 	Debug::printCvMat(D1, "-==D1==-");
 	_camerasRef->at(0)->setDistortionCoefficients(D1);
+    cvSave("D1.xml", D1);
+
 	Debug::printCvMat(D2, "-==D2==-");
 	_camerasRef->at(1)->setDistortionCoefficients(D2);
+    cvSave("D2.xml", D2);
+
 	Debug::printCvMat(R, "-==R==-");
+    cvSave("R.xml", R);
+
 	Debug::printCvMat(T, "-==T==-");
+    cvSave("T.xml", T);
+
 	Debug::printCvMat(E, "-==E==-");
+    cvSave("E.xml", E);
+
 	Debug::printCvMat(F, "-==F==-");
+    cvSave("F.xml", F);
+
+	// CALIBRATION QUALITY CHECK
+	// because the output fundamental matrix implicitly
+	// includes all the output information,
+	// we can check the quality of calibration using the
+	// epipolar geometry constraint: m2^t*F*m1=0
+
+	vector<CvPoint3D32f> lines[2];
+	imagePoints[0].resize(numPoints);
+	imagePoints[1].resize(numPoints);
+	_imagePoints1 = cvMat(1, numPoints, CV_32FC2, &imagePoints[0][0] );
+	_imagePoints2 = cvMat(1, numPoints, CV_32FC2, &imagePoints[1][0] );
+	lines[0].resize(numPoints);
+	lines[1].resize(numPoints);
+	CvMat L1 = cvMat(1, numPoints, CV_32FC3, &lines[0][0]);
+	CvMat L2 = cvMat(1, numPoints, CV_32FC3, &lines[1][0]);
+	//Always work in undistorted space
+	cvUndistortPoints( &_imagePoints1, &_imagePoints1, M1, D1, 0, M1 );
+	cvUndistortPoints( &_imagePoints2, &_imagePoints2, M2, D2, 0, M2 );
+	cvComputeCorrespondEpilines( &_imagePoints1, 1, F, &L1 );
+	cvComputeCorrespondEpilines( &_imagePoints2, 2, F, &L2 );
+	double reprojectionError = 0;
+
+	for( int i = 0; i < numPoints; i++ ) {
+		double err = fabs(imagePoints[0][i].x*lines[1][i].x
+				   + imagePoints[0][i].y*lines[1][i].y + lines[1][i].z)
+				   + fabs(imagePoints[1][i].x*lines[0][i].x
+				   + imagePoints[1][i].y*lines[0][i].y + lines[0][i].z);
+		reprojectionError += err;
+	}
+	reprojectionError = reprojectionError /( numSamples * numCorners );
+
+	QString results = QString("Calibration ended in %1s\nBack projection error = %2\n").arg(processingTime).arg(reprojectionError);
+	_resultsText->setText(results);
+	logDEBUG("Calibration ended in %.2fs. Back projection error = %.2fpx", processingTime, reprojectionError);
 
 	for (unsigned int i = 0; i < _camerasRef->size(); i++) {
 		_resultsText->append((_camerasRef->at(i))->getInfo());
@@ -311,7 +358,8 @@ void StereoVisionCalibrationDialog::recordCalibrationImage() {
 
 void StereoVisionCalibrationDialog::refreshAvailableCalibrationPointsLabel() {
 
-	QString availablePoints = QString("Number of Available Points to Calibrate: %1.").arg(_calibrationPoints.size());
+	int numSamples = _calibrationPoints.size() / (_numIntCornersCol * _numIntCornersRow  * 2);
+	QString availablePoints = QString("%1 image(s) available for calibration. Total of %2 points.").arg(numSamples).arg(_calibrationPoints.size());
 	_numberAvailablePointsLabel->setText(availablePoints);
 
 }

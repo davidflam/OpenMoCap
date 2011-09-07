@@ -10,14 +10,19 @@
 #include "MainWindow.h"
 
 void MainWindow::about() {
-	QMessageBox::about(this, tr("About OpenMoCap"), tr("<center><b>OpenMoCap 2011</b><br/>"
-		"<br/><i>Lead Developer</i>"
-		"<br/>David Lunardi Flam<br/>"
-		"<br/><i>Developers</i>"
-		"<br/>Carolina Andrade Silva Bigonha"
-		"<br/>Daniel Pacheco de Queiroz"
-		"<br/>João Victor Boechat Gomide"
-		"<br/>Thatyene Louise Alves de Souza Ramos"));
+	QMessageBox::about(this, tr("About OpenMoCap"),
+	 tr("<div style='text-align:center;'><h3>OpenMoCap 2011</h3>"
+		"<h4>Project Coordinator</h4>"
+		"João Victor Boechat Gomide"
+		"<h4>Lead Developer</h4>"
+		"David Lunardi Flam"
+		"<h4>Developers</h4>"
+		"Carolina Andrade Silva Bigonha, "
+		"Daniel Pacheco de Queiroz, "
+		"Laerte Mateus Rodrigues, "
+		"Thatyene Louise Alves de Souza Ramos."
+	 	"</div>")
+	);
 }
 
 void MainWindow::createActions() {

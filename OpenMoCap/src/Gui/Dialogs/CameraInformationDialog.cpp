@@ -34,7 +34,7 @@ void CameraInformationDialog::selectCalibrationImages() {
 
 	QFileDialog dialog(this);
 	dialog.setFileMode(QFileDialog::ExistingFiles);
-	dialog.setNameFilter(tr("Images (*.png *.xpm *.jpg)"));
+	dialog.setNameFilter(tr("Images (*.png *.ppm *.xpm *.jpg)"));
 	dialog.setAcceptMode(QFileDialog::AcceptOpen);
 	dialog.setViewMode(QFileDialog::Detail);
 
