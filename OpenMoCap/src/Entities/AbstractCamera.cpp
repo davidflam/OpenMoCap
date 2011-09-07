@@ -21,18 +21,34 @@ AbstractCamera::~AbstractCamera() {
 		cvReleaseMat(&_distortionCoefficients);
 	}
 
+	if (_distortionModelX != NULL) {
+		cvReleaseMat(&_distortionModelX);
+	}
+
+	if (_distortionModelY != NULL) {
+		cvReleaseMat(&_distortionModelY);
+	}
+
+	if (_disparityToDepth != NULL) {
+		cvReleaseMat(&_disparityToDepth);
+	}
+
 	delete _frame;
 }
 
 AbstractCamera::AbstractCamera(int id, int width, int height, int frameRate) :
-	_id(id), _width(width), _height(height), _frameRate(frameRate), _intrinsicParams(NULL), _translation(cvPoint3D32f(
-			0, 0, 0)), _rotation(cvPoint3D32f(0, 0, 0)), _distortionCoefficients(NULL) {
+	_id(id), _width(width), _height(height), _frameRate(frameRate), _intrinsicParams(NULL), _translation(cvPoint3D32f(0, 0, 0)),
+	_rotation(cvPoint3D32f(0, 0, 0)), _distortionCoefficients(NULL),
+	_distortionModelX(NULL), _distortionModelY(NULL), _disparityToDepth(NULL){
+
 	_cameraType = -1;
 }
 
 AbstractCamera::AbstractCamera(int id, int width, int height, int frameRate, int type) :
-	_id(id), _width(width), _height(height), _frameRate(frameRate), _intrinsicParams(NULL), _translation(cvPoint3D32f(
-			0, 0, 0)), _rotation(cvPoint3D32f(0, 0, 0)), _distortionCoefficients(NULL) {
+	_id(id), _width(width), _height(height), _frameRate(frameRate), _intrinsicParams(NULL), _translation(cvPoint3D32f(0, 0, 0)),
+	_rotation(cvPoint3D32f(0, 0, 0)), _distortionCoefficients(NULL),
+	_distortionModelX(NULL), _distortionModelY(NULL), _disparityToDepth(NULL) {
+
 	_cameraType = type;
 }
 

@@ -239,27 +239,27 @@ public:
 		_rotation = rotation;
 	}
 
-	CvMat getDistortionModelX() {
+	CvMat* getDistortionModelX() {
 		return _distortionModelX;
 	}
 
-	void setDistortionModelX(CvMat distortionModelX) {
+	void setDistortionModelX(CvMat* distortionModelX) {
 		_distortionModelX = distortionModelX;
 	}
 
-	CvMat getDistortionModelY() {
+	CvMat* getDistortionModelY() {
 		return _distortionModelY;
 	}
 
-	void setDistortionModelY(CvMat distortionModelY) {
+	void setDistortionModelY(CvMat* distortionModelY) {
 		_distortionModelY = distortionModelY;
 	}
 
-	CvMat getDisparityToDepth() {
+	CvMat* getDisparityToDepth() {
 		return _disparityToDepth;
 	}
 
-	void setDisparityToDepth(CvMat disparityToDepth) {
+	void setDisparityToDepth(CvMat* disparityToDepth) {
 		_disparityToDepth = disparityToDepth;
 	}
 
@@ -442,9 +442,9 @@ private:
 	//! Camera distortion coefficients.
 	CvMat *_distortionCoefficients;
 
-	CvMat _distortionModelX;
-	CvMat _distortionModelY;
-	CvMat _disparityToDepth;
+	CvMat* _distortionModelX;
+	CvMat* _distortionModelY;
+	CvMat* _disparityToDepth;
 
 	//! Points of Interest in a frame.
 	map<string, POI> _POIs;

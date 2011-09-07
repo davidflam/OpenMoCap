@@ -29,6 +29,14 @@ void VideoController::run() {
 	while (true) {
 
 		IplImage* currentFrame = _cameraRef->getFrame();
+
+		if(_cameraRef->getDistortionModelX() != NULL && _cameraRef->getDistortionModelY() != NULL) {
+			IplImage* undistortedFrame = cvCreateImage(cvSize(currentFrame->width, currentFrame->height), currentFrame->depth, currentFrame->nChannels);
+			cvRemap(currentFrame, undistortedFrame, _cameraRef->getDistortionModelX(), _cameraRef->getDistortionModelY());
+			cvCopy(undistortedFrame, currentFrame, 0);
+			cvReleaseImage(&undistortedFrame);
+		}
+
 		vector<POI> newPOIs;
 
 		if (_videoStatus == VideoStatusEnum::PLAY_LIVE) {
