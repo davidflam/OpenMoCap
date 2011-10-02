@@ -1,7 +1,7 @@
 # OpenMocap
 # Executes Qt's Meta-Object Compiler, generating .moc files
 
-MAKE_BIN =../../Vendor/mingw/mingw32-make.exe -j4
+MAKE_BIN =mingw32-make.exe -j4
 QT_MOC_COMPILER = moc
 MOC_OBJECTS = $(patsubst %.h, %.moc, $(wildcard *.h))
 

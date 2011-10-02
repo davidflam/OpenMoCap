@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include <opencv2/highgui/highgui_c.h>
+#include <opencv/cv.h>
 
 #include "Debug.h"
 
