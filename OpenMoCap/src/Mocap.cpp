@@ -142,8 +142,7 @@ void Mocap::initializeCameras() {
 	int i = 0;
 	int nCameras = _videoInput.listDevices(true);
 	for (; i < nCameras; i++) {
-		DirectShowCamera* camera = new DirectShowCamera(i, _cameraResolutionWidth, _cameraResolutionHeight,
-				_cameraFrameRate, &_videoInput);
+		DirectShowCamera* camera = new DirectShowCamera(i, _cameraResolutionWidth, _cameraResolutionHeight, _cameraFrameRate, &_videoInput);
 		_cameras.push_back(camera);
 	}
 
@@ -151,8 +150,7 @@ void Mocap::initializeCameras() {
 	 * VideoCameras
 	 **/
 	for (int j = 0; j < _videoCamerasNumber; j += 1) {
-		VideoCamera* camera = new VideoCamera(i, _cameraResolutionWidth, _cameraResolutionHeight,
-				_cameraFrameRate);
+		VideoCamera* camera = new VideoCamera(i, _cameraResolutionWidth, _cameraResolutionHeight, _cameraFrameRate);
 		_cameras.push_back(camera);
 		i += 1;
 	}
@@ -160,8 +158,52 @@ void Mocap::initializeCameras() {
 	/**
 	 * OptiTrackCameras running
 	 */
-    OptiTrackCamera::initializeOptiTrackCameras(&_cameras, _cameraResolutionWidth, _cameraResolutionHeight,
-			_cameraFrameRate);
+    OptiTrackCamera::initializeOptiTrackCameras(&_cameras, _cameraResolutionWidth, _cameraResolutionHeight, _cameraFrameRate);
+}
+
+void Mocap::loadCalibrationData() {
+
+	logDEBUG("Loading calibration data...");
+	ifstream disparityToDepthMatrixFile("Q.xml");
+
+	if(!disparityToDepthMatrixFile) {
+
+		logDEBUG("Disparity to depth matrix file (Q.xml) not available.");
+
+	} else {
+
+		CvMat* disparityToDepth = (CvMat*)cvLoad("Q.xml");
+		char* distortionModelFileName = new char[8];
+
+		for (int i = 0; i < (int) _cameras.size(); i++) {
+
+			AbstractCamera* camera = _cameras.at(i);
+			camera->setCalibrated(true);
+			camera->setDisparityToDepth(disparityToDepth);
+			logDEBUG("Disparity to depth [Q.xml] loaded to camera %s", camera->getName().c_str());
+
+			sprintf (distortionModelFileName, "mx%d.xml", (i+1));
+			ifstream distortionModelXMatrixFile(distortionModelFileName);
+
+			if(distortionModelXMatrixFile) {
+				CvMat* distortionModelX = (CvMat*)cvLoad(distortionModelFileName);
+				camera->setDistortionModelX(distortionModelX);
+				logDEBUG("Distortion model X [%s] loaded to camera %s", distortionModelFileName, camera->getName().c_str());
+			}
+
+			sprintf (distortionModelFileName, "my%d.xml", (i+1));
+			ifstream distortionModelYMatrixFile(distortionModelFileName);
+
+			if(distortionModelYMatrixFile) {
+				CvMat* distortionModelY = (CvMat*)cvLoad(distortionModelFileName);
+				camera->setDistortionModelY(distortionModelY);
+				logDEBUG("Distortion model Y [%s] loaded to camera %s", distortionModelFileName, camera->getName().c_str());
+			}
+
+		}
+
+	}
+
 }
 
 void Mocap::releaseCameras() {
@@ -183,10 +225,10 @@ void Mocap::initializeSkeleton() {
 }
 
 Mocap::Mocap(int argc, char* argv[]) :
-	_calibrationAlgorithmType(CalibrationAlgorithmEnum::ZHANG), _POIFinderAlgorithmType(
-			POIFinderAlgorithmEnum::BLOB_EXTRACTOR_6_CONNECTIVITY), _trackingAlgorithmType(
-			TrackingAlgorithmEnum::KALMAN_FILTER), _reconstructionAlgorithmType(
-			ReconstructionAlgorithmEnum::BASIC_RECONSTRUCTOR) {
+	_calibrationAlgorithmType(CalibrationAlgorithmEnum::ZHANG),
+	_POIFinderAlgorithmType(POIFinderAlgorithmEnum::BLOB_EXTRACTOR_6_CONNECTIVITY),
+	_trackingAlgorithmType(TrackingAlgorithmEnum::KALMAN_FILTER),
+	_reconstructionAlgorithmType(ReconstructionAlgorithmEnum::BASIC_RECONSTRUCTOR) {
 
 	// ALPHA_BETA_GAMMA_FILTER
 	// KALMAN_FILTER
@@ -196,6 +238,7 @@ Mocap::Mocap(int argc, char* argv[]) :
 
 	initializeCameraProperties();
 	initializeCameras();
+	loadCalibrationData();
 	initializeSkeleton();
 }
 

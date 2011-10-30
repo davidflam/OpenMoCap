@@ -264,6 +264,11 @@ private:
 	void initializeCameras();
 
 	/*!
+	 * Loads camera calibration data.
+	 */
+	void loadCalibrationData();
+
+	/*!
 	 * Releases the vector of active cameras.
 	 */
 	void releaseCameras();

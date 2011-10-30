@@ -33,6 +33,10 @@ AbstractCamera::~AbstractCamera() {
 		cvReleaseMat(&_disparityToDepth);
 	}
 
+	if (_undistortedFrame != NULL) {
+		cvReleaseImage(&_undistortedFrame);
+	}
+
 	delete _frame;
 }
 
@@ -41,6 +45,8 @@ AbstractCamera::AbstractCamera(int id, int width, int height, int frameRate) :
 	_rotation(cvPoint3D32f(0, 0, 0)), _distortionCoefficients(NULL),
 	_distortionModelX(NULL), _distortionModelY(NULL), _disparityToDepth(NULL){
 
+	_undistortedFrame =  cvCreateImage(cvSize(width, height), 8, 3);
+	_calibrated = false;
 	_cameraType = -1;
 }
 
@@ -49,6 +55,8 @@ AbstractCamera::AbstractCamera(int id, int width, int height, int frameRate, int
 	_rotation(cvPoint3D32f(0, 0, 0)), _distortionCoefficients(NULL),
 	_distortionModelX(NULL), _distortionModelY(NULL), _disparityToDepth(NULL) {
 
+	_undistortedFrame =  cvCreateImage(cvSize(width, height), 8, 3);
+	_calibrated = false;
 	_cameraType = type;
 }
 

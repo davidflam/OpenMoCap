@@ -9,8 +9,8 @@
 
 StereoVisionCalibrationDialog::StereoVisionCalibrationDialog(CaptureController* captureController) :
 	_captureControllerRef(captureController), _camerasRef(captureController->getMocap()->getCameras())
-	,_modelVisualizationRef(captureController->getVisualizationRef()), _numIntCornersRow(9.0f), _numIntCornersCol(6.0f)
-	, _calibrationPatternWidth(2.5f), _calibrationPatternHeight(2.5f) {
+	,_modelVisualizationRef(captureController->getVisualizationRef()), _numIntCornersRow(7.0f), _numIntCornersCol(7.0f)
+	, _calibrationPatternWidth(2.2f), _calibrationPatternHeight(2.2f) {
 
 	QString windowTitle("Stereo Calibration");
 	setWindowTitle(windowTitle);
@@ -391,6 +391,13 @@ bool StereoVisionCalibrationDialog::foundValidCornersForStereoCalibration() {
 		}
 
 		if ( cvFindChessboardCorners(grayImage, patternSize, corners, &numDetectedCorners, CV_CALIB_CB_ADAPTIVE_THRESH) && numDetectedCorners == numCorners ) {
+
+			int numSamples = _calibrationPoints.size() / (_numIntCornersCol * _numIntCornersRow  * 2);
+			int params[3] = {CV_IMWRITE_JPEG_QUALITY, 100, 0};
+			char buffer [50];
+			sprintf (buffer, "sample_%03d_cam_%02d.jpg", numSamples, i);
+			cvSaveImage(buffer, grayImage, params);
+			logDEBUG("Calibration image saved %s", buffer);
 
 			cvFindCornerSubPix(grayImage, corners, numCorners, cvSize(5, 5), cvSize(-1, -1), cvTermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 10, 0.1));
 

@@ -263,6 +263,19 @@ public:
 		_disparityToDepth = disparityToDepth;
 	}
 
+	IplImage* getUndistortedFrame() {
+
+		IplImage* currentFrame = getFrame();
+
+		if(_calibrated) {
+			cvRemap(getFrame(), _undistortedFrame, _distortionModelX, _distortionModelY);
+			return _undistortedFrame;
+		} else {
+			return currentFrame;
+		}
+
+	}
+
 	/*!
 	 * Resets the camera parameters.
 	 */
@@ -451,6 +464,9 @@ private:
 
 	//! Calibration status.
 	bool _calibrated;
+
+	//! Undistorted frame cache
+	IplImage* _undistortedFrame;
 
 };
 

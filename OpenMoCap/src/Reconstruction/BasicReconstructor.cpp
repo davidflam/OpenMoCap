@@ -31,46 +31,27 @@ vector<POI> BasicReconstructor::reconstructPOIs(AbstractCamera* camera1, Abstrac
 
 		CvMat* points1 = cvCreateMat(1, nPOIsFirstCamera, CV_32FC2);
 		CvMat* points2 = cvCreateMat(1, nPOIsFirstCamera, CV_32FC2);
-		AbstractReconstructor::computePointArrays(firstCameraPOIs, secondCameraPOIs, points1, points2,
-				camera1->getWidth(), camera2->getHeight());
+		AbstractReconstructor::computePointArrays(firstCameraPOIs, secondCameraPOIs, points1, points2, camera1->getWidth(), camera2->getHeight());
 
-		//--- K ; Intrinsic parameter matrix
-		CvMat* kMatrix = camera1->getIntrinsicParams();
-
-		//--- [R|T]
-		CvMat* rtMatrix1 = AbstractCamera::computeRtMatrix(camera1->getRotation().x, camera1->getRotation().y,
-				camera1->getRotation().z, camera1->getTranslation().x, camera1->getTranslation().y,
-				camera1->getTranslation().z);
-
-		//--- M ; First camera projection matrix
-		CvMat* cameraMatrix1 = cvCreateMat(3, 4, CV_32FC1);
-		cvMatMul(kMatrix, rtMatrix1, cameraMatrix1);
-
-		cvReleaseMat(&rtMatrix1);
-
-		CvMat* rtMatrix2 = AbstractCamera::computeRtMatrix(camera2->getRotation().x, camera2->getRotation().y,
-				camera2->getRotation().z, camera2->getTranslation().x, camera2->getTranslation().y,
-				camera2->getTranslation().z);
-
-		//--- M' ; Second camera projection matrix
-		CvMat* cameraMatrix2 = cvCreateMat(3, 4, CV_32FC1);
-		cvMatMul(kMatrix, rtMatrix2, cameraMatrix2);
-
-		cvReleaseMat(&rtMatrix2);
+		CvMat* Q = camera1->getDisparityToDepth();
 
 		int i = 0;
 		for (map<string, POI>::const_iterator it = firstCameraPOIs.begin(); it != firstCameraPOIs.end(); ++it) {
 
 			POI firstCameraPOI = it->second;
 
-			CvPoint2D32f p1 = cvPoint2D32f(points1->data.fl[i * 2], points1->data.fl[i * 2 + 1]);
-			CvPoint2D32f p2 = cvPoint2D32f(points2->data.fl[i * 2], points2->data.fl[i * 2 + 1]);
+			CvPoint2D32f pointRightImage = cvPoint2D32f(points1->data.fl[i * 2], points1->data.fl[i * 2 + 1]);
+			CvPoint2D32f pointLeftImage = cvPoint2D32f(points2->data.fl[i * 2], points2->data.fl[i * 2 + 1]);
 
-			CvMat* estimated3dHomogeneousPoint = AbstractReconstructor::compute3dHomogeneousCoordinates(cameraMatrix1,
-					cameraMatrix2, p1, p2);
+			float d = pointRightImage.x - pointLeftImage.x;
+			float x = pointLeftImage.x * cvmGet(Q, 0, 0) + cvmGet(Q, 0, 3);
+			float y = pointLeftImage.y * cvmGet(Q, 1, 1) + cvmGet(Q, 1, 3);
+			float z = cvmGet(Q, 2, 3);
+			float w = d * cvmGet(Q, 3, 2) + cvmGet(Q, 3, 3);
 
-			firstCameraPOI.setCoordinates3d(cvPoint3D32f(cvmGet(estimated3dHomogeneousPoint, 0, 0), cvmGet(
-					estimated3dHomogeneousPoint, 1, 0), cvmGet(estimated3dHomogeneousPoint, 2, 0)));
+			firstCameraPOI.setCoordinates3d( cvPoint3D32f( x/w, y/w, z/w ) );
+
+			logDEBUG("%s", firstCameraPOI.getInfo3d().toStdString().c_str());
 
 			POIs3d.push_back(firstCameraPOI);
 
@@ -79,8 +60,6 @@ vector<POI> BasicReconstructor::reconstructPOIs(AbstractCamera* camera1, Abstrac
 		}
 
 		//--- Clear heap
-		cvReleaseMat(&cameraMatrix1);
-		cvReleaseMat(&cameraMatrix2);
 		cvReleaseMat(&points1);
 		cvReleaseMat(&points2);
 
