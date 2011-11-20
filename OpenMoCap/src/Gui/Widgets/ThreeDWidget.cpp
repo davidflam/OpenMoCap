@@ -15,8 +15,8 @@ ThreeDWidget::ThreeDWidget(QWidget* parent, Skeleton skeleton, vector<
 					cameras) {
 
 	_eye.x = 0.0;
-	_eye.y = 40.0;
-	_eye.z = -40.0;
+	_eye.y = 5.0;
+	_eye.z = -5.0;
 
 	_center.x = 0.0;
 	_center.y = 0.0;
@@ -70,7 +70,7 @@ void ThreeDWidget::resizeGL(int width, int height) {
 	}
 
 	GLfloat fAspect = GLfloat(width) / GLfloat(height);
-	gluPerspective(60.0f, fAspect, 1.0, 400.0);
+	gluPerspective(60.0f, fAspect, 1.0, 200.0);
 
 }
 
@@ -184,7 +184,7 @@ void ThreeDWidget::drawPointCloud() {
 		glPushMatrix();
 
 		CvPoint3D32f coords = _pointCloud[i].getCoordinates3d();
-		glTranslatef(coords.x, coords.y, coords.z);
+		glTranslatef(coords.x/10, coords.y/10, coords.z/10);
 
 		glColor3ub(255, 0, 0);
 		gluSphere(quadric, 0.1f, 20, 20);
@@ -283,8 +283,9 @@ void ThreeDWidget::keyPressEvent(QKeyEvent *event) {
 		//--- Reset to default view
 		_rotationY = 0;
 		_center.x = 0;
-		_eye.z = -40.0;
-		_eye.y = 40.0;
+		_eye.z = -5.0;
+		_eye.y = 5.0;
+		break;
 	}
 
 	updateGL();

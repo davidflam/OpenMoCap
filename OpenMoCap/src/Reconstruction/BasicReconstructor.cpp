@@ -23,7 +23,7 @@ vector<POI> BasicReconstructor::reconstructPOIs(AbstractCamera* camera1, Abstrac
 	map<string, POI> secondCameraPOIs = camera2->getPOIs();
 
 	int nPOIsFirstCamera = firstCameraPOIs.size();
-	int nPOIsSecondCamera = firstCameraPOIs.size();
+	int nPOIsSecondCamera = secondCameraPOIs.size();
 	vector<POI> POIs3d;
 
 	//--- All points must have a correspondent.
@@ -38,7 +38,8 @@ vector<POI> BasicReconstructor::reconstructPOIs(AbstractCamera* camera1, Abstrac
 		int i = 0;
 		for (map<string, POI>::const_iterator it = firstCameraPOIs.begin(); it != firstCameraPOIs.end(); ++it) {
 
-			POI firstCameraPOI = it->second;
+			POI tridimensionalPOI;
+			tridimensionalPOI.setSemantic(QString(it->first.c_str()));
 
 			CvPoint2D32f pointRightImage = cvPoint2D32f(points1->data.fl[i * 2], points1->data.fl[i * 2 + 1]);
 			CvPoint2D32f pointLeftImage = cvPoint2D32f(points2->data.fl[i * 2], points2->data.fl[i * 2 + 1]);
@@ -49,8 +50,8 @@ vector<POI> BasicReconstructor::reconstructPOIs(AbstractCamera* camera1, Abstrac
 			float z = cvmGet(Q, 2, 3);
 			float w = d * cvmGet(Q, 3, 2) + cvmGet(Q, 3, 3);
 
-			firstCameraPOI.setCoordinates3d( cvPoint3D32f( x/w, y/w, z/w ) );
-			POIs3d.push_back(firstCameraPOI);
+			tridimensionalPOI.setCoordinates3d( cvPoint3D32f( x/w, y/w, z/w ) );
+			POIs3d.push_back(tridimensionalPOI);
 			i++;
 
 		}
