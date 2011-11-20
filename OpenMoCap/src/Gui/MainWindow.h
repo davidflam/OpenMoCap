@@ -36,6 +36,11 @@ public:
 	//! Return the Mocap reference.
 	Mocap* getMocapRef();
 
+	/*!
+	 * Updates POIs details
+	 */
+	void updatePOIsInformationToolBar(vector<POI>& tridimensionalPOIs);
+
 private slots:
 
 	/*!
@@ -177,15 +182,26 @@ private:
 	//! Update algorithms button.
 	QPushButton* _updateAlgorithmsButton;
 
+	//! POIs Information Tool Bar
+	QToolBar* _poisInformationToolBar;
+
+	//! POIs Details Table
+	QTableWidget* _poisInformationTable;
+
+	//! Table row index by POI semantic map
+	map<string, int> _rowIndexByPOISemantic;
+
 	/*!
 	 * Creates the tool bars.
 	 */
 	void createToolBars();
+	void createPOIsInformationToolBar();
 
 	/*!
 	 * Releases the tool bars.
 	 */
 	void releaseToolBars();
+	void releasePOIsInformationToolBar();
 
 	/* Central Widget */
 

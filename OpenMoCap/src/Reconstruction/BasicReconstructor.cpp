@@ -50,11 +50,7 @@ vector<POI> BasicReconstructor::reconstructPOIs(AbstractCamera* camera1, Abstrac
 			float w = d * cvmGet(Q, 3, 2) + cvmGet(Q, 3, 3);
 
 			firstCameraPOI.setCoordinates3d( cvPoint3D32f( x/w, y/w, z/w ) );
-
-			logDEBUG("%s", firstCameraPOI.getInfo3d().toStdString().c_str());
-
 			POIs3d.push_back(firstCameraPOI);
-
 			i++;
 
 		}

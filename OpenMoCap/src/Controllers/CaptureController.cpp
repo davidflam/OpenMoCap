@@ -49,13 +49,6 @@ void __stdcall timerEvent(void* parameter, DWORD b, DWORD c) {
 		WaitForMultipleObjects(captureController->_numVideoControllers, events, TRUE, maxWaitTimeInMSec);
 		trackingTime = trackingTimer.stop();
 
-		//--- Debug tracked initialized 2d pois for each camera
-//		for (int i = 0; i < captureController->_numVideoControllers; i++) {
-//			cout << "Camera " << captureController->_videoControllersRef[i]->getCamera()->getName() << "\n";
-//			cout << captureController->_videoControllersRef[i]->getCamera()->getCurrent2dPOIsInfo().toStdString() << endl;
-//		}
-//		cout << "*****************************************" << endl;
-
 		//---If recording, must use Triangulation algorithm and save info to a file
 		if (captureController->_captureStatus == CaptureStatusEnum::RECORDING) {
 			captureController->refreshCaptureTime();
@@ -79,6 +72,9 @@ void __stdcall timerEvent(void* parameter, DWORD b, DWORD c) {
 				captureController->_visualizationRef->setPointCloud(tridimensionalPOIs);
 				captureController->_visualizationRef->update();
 
+				//--- Update POIs Details
+				captureController->_mocapMainWindowRef->updatePOIsInformationToolBar(tridimensionalPOIs);
+
 			}
 
 		} else {
@@ -88,15 +84,15 @@ void __stdcall timerEvent(void* parameter, DWORD b, DWORD c) {
 		// TIME COUNT
 		//--- Faster than cout in this formatting context
 		//printf("%f\t%f\t%f\t%f\n", poiDetectionTime, trackingTime, triangulationTime, outputTime);
-		fflush(stdout);
+		//fflush(stdout);
 
 	}
 }
 
-CaptureController::CaptureController(Mocap* mocap) :
+CaptureController::CaptureController(Mocap* mocap, MainWindow* mocapMainWindow) :
 	_captureStatus(CaptureStatusEnum::PLAYING), _mocapRef(mocap), _numVideoControllers(0), _reconstructor(
 			mocap->getReconstructionAlgorithm()), _outputWriter(mocap->getOutputWriterAlgorithm()), _visualizationRef(
-			NULL) {
+			NULL), _mocapMainWindowRef(mocapMainWindow) {
 }
 
 CaptureController::~CaptureController() {
@@ -110,7 +106,6 @@ void CaptureController::addVideoController(VideoController* videoController) {
 
 	if (_numVideoControllers >= MAX_VIDEO_CONTROLLERS) {
 		logERROR("I can't manage any more cameras!");
-		//cerr << ("[ERROR] CaptureController.cpp:33 - I can't manage any more cameras!") << endl;
 	} else {
 		_videoControllersRef[_numVideoControllers] = videoController;
 		_numVideoControllers++;

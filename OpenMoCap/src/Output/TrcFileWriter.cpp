@@ -23,7 +23,7 @@ void TrcFileWriter::writeMoCapFileHeader(vector<POI> poiData) {
 	_fileStream << "DataRate\tCameraRate\tNumFrames\t";
 	_fileStream << "NumMarkers\tUnits\tOrigDataRate\tOrigDataStartFrame\tOrigNumFrames\n";
 	_fileStream << _frameRate << "\t" << _frameRate << "\t@1\t";
-	_fileStream << poiData.size() << "\tmm\t" << _frameRate << "\t0\t@1\n";
+	_fileStream << poiData.size() << "\tcm\t" << _frameRate << "\t0\t@1\n";
 
 	_fileStream << "Frame#\tTime\t";
 

@@ -276,7 +276,7 @@ int main(int argc, char* argv[]) {
 //	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 
 	/*
-	 * OpenCv 1.1 initializes COM with incompatible thread model with
+	 * OpenCv 2.3.1 initializes COM with incompatible thread model with
 	 * Optitrack SDK
 	 */
 	HRESULT res = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);

@@ -28,26 +28,8 @@ public:
 	 * @param mouseEventPosition The mouse event position.
 	 * @param poiSemanticTypes A list with the "POI" semantic types.
 	 */
-	POISemanticSelectionDialog(QWidget *parent = NULL, POI *poi = NULL,
-			QPoint mouseEventPosition = QPoint(0, 0), QStringList* poiSemanticTypes = NULL);
+	POISemanticSelectionDialog(QWidget *parent = NULL, POI *poi = NULL, QPoint mouseEventPosition = QPoint(0, 0), QStringList* poiSemanticTypes = NULL);
 
-
-	/*!
-	 * POISemanticSelectionDialog constructor.
-	 *
-	 * @param parent The parent dialog.
-	 * @param poi The point of interest.
-	 * @param mouseEventPosition The mouse event position.
-	 * @param poiSemanticTypes A list with the "POI" semantic types.
-	 * @param camerasRef The reference for the vector of the active cameras
-	 */
-	POISemanticSelectionDialog(QWidget *parent = NULL, POI *poi = NULL,
-			QPoint mouseEventPosition = QPoint(0, 0), QStringList* poiSemanticTypes = NULL, vector<AbstractCamera*> *camerasRef = NULL);
-
-	/*!
-	 * POISemanticSelectionDialog destructor.
-	 */
-	~POISemanticSelectionDialog();
 
 protected:
 	/*!

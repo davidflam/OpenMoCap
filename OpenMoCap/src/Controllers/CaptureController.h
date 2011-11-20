@@ -14,6 +14,7 @@
 
 //--- Forward Declaration
 class Mocap;
+class MainWindow;
 
 //! Maximum number of video controllers.
 #define MAX_VIDEO_CONTROLLERS 10
@@ -38,7 +39,7 @@ public:
 	 *
 	 * @param mocap Mocap object.
 	 */
-	CaptureController(Mocap* mocap);
+	CaptureController(Mocap* mocap, MainWindow* mocapMainWindow);
 
 	/*!
 	 * CaptureController destructor.
@@ -129,6 +130,9 @@ private:
 
 	//! ThreeDWidget Reference
 	ThreeDWidget* _visualizationRef;
+
+	//! ThreeDWidget Reference
+	MainWindow* _mocapMainWindowRef;
 };
 
 #endif /* CAPTURECONTROLLER_H_ */

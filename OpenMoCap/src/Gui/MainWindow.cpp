@@ -10,22 +10,28 @@
 #include "MainWindow.h"
 
 void MainWindow::about() {
-	QMessageBox::about(this, tr("About OpenMoCap"),
-	 tr("<div style='text-align:center;'><h3>OpenMoCap 2011</h3>"
-		"<h4>Project Coordinator</h4>"
-		"João Victor Boechat Gomide"
-		"<h4>Lead Developer</h4>"
-		"David Lunardi Flam"
-		"<h4>Developers</h4>"
-		"Carolina Andrade Silva Bigonha, "
-		"Daniel Pacheco de Queiroz, "
-		"Laerte Mateus Rodrigues, "
-		"Thatyene Louise Alves de Souza Ramos."
-	    "<h4>Our Thanks To</h4>"
-	    "Martin Peris, "
-	    "Willow Garage. "
-	 	"</div>")
-	);
+
+	char* aboutBody = new char[500];
+	strcpy(aboutBody, "<div style='text-align:center;'><h3>OpenMoCap</h3>");
+	strcat(aboutBody, "<p>Build Date ");
+	strcat(aboutBody, __DATE__);
+	strcat(aboutBody, ". This software is released under the <a href='http://www.opensource.org/licenses/mit-license.php'>MIT License</a>.");
+	strcat(aboutBody, "</p>");
+	strcat(aboutBody, "<h4>Project Coordinator</h4>");
+	strcat(aboutBody, "João Victor Boechat Gomide");
+	strcat(aboutBody, "<h4>Lead Developer</h4>");
+	strcat(aboutBody, "David Lunardi Flam");
+	strcat(aboutBody, "<h4>Developers</h4>");
+	strcat(aboutBody, "Carolina Andrade Silva Bigonha, ");
+	strcat(aboutBody, "Daniel Pacheco de Queiroz, ");
+	strcat(aboutBody, "Laerte Mateus Rodrigues, ");
+	strcat(aboutBody, "Thatyene Louise Alves de Souza Ramos.");
+	strcat(aboutBody, "<h4>Our Thanks To</h4>");
+	strcat(aboutBody, "Martin Peris, ");
+	strcat(aboutBody, "Willow Garage. ");
+	strcat(aboutBody, "</div>");
+
+	QMessageBox::about(this, tr("About OpenMoCap"), tr(aboutBody));
 }
 
 void MainWindow::createActions() {
@@ -118,7 +124,9 @@ void MainWindow::createToolBars() {
 	timeSeparator->setFrameShape(QFrame::VLine);
 	_configToolBar->addWidget(timeSeparator);
 
-	//TODO Implement algorithms selection
+	createPOIsInformationToolBar();
+
+	/*TODO Implement algorithms selection
 	//--- Calibration Algorithms Combobox
 	_calibrationLabel = new QLabel(tr("Calibration:"));
 	_configToolBar->addWidget(_calibrationLabel);
@@ -206,6 +214,67 @@ void MainWindow::createToolBars() {
 	QLabel* changeAlgorithmsSeparator = new QLabel(this);
 	changeAlgorithmsSeparator->setFrameShape(QFrame::VLine);
 	_configToolBar->addWidget(changeAlgorithmsSeparator);
+	*/
+}
+
+void MainWindow::updatePOIsInformationToolBar(vector<POI>& tridimensionalPOIs) {
+
+	for (unsigned int i = 0; i < tridimensionalPOIs.size(); i++ ) {
+
+		POI currentPOI = tridimensionalPOIs.at(i);
+		CvPoint3D32f poiPosition = currentPOI.getCoordinates3d();
+		float x = poiPosition.x;
+		float y = poiPosition.y;
+		float z = poiPosition.z;
+
+		int rowIndex = _rowIndexByPOISemantic[currentPOI.getSemantic().toStdString()];
+		_poisInformationTable->item(rowIndex, 1)->setText(QString("%1%2").arg(x < 0 ? '-' : '+').arg(qFabs(x), 3, 'f', 2, '0'));
+		_poisInformationTable->item(rowIndex, 2)->setText(QString("%1%2").arg(y < 0 ? '-' : '+').arg(qFabs(y), 3, 'f', 2, '0'));
+		_poisInformationTable->item(rowIndex, 3)->setText(QString("%1%2").arg(z < 0 ? '-' : '+').arg(qFabs(z), 3, 'f', 2, '0'));
+	}
+
+}
+
+void MainWindow::createPOIsInformationToolBar() {
+
+	_poisInformationToolBar = new QToolBar(tr("POIs"), this);
+	_poisInformationToolBar->setMovable(false);
+	_poisInformationToolBar->setFixedWidth(280);
+
+	QStringList* poiSemanticTypes = _mocapRef->getPOISemanticTypes();
+
+	_poisInformationTable = new QTableWidget(poiSemanticTypes->size(), 4);
+	QStringList headerLabels;
+	headerLabels << "Semantic" << "X (cm)" << "Y (cm)" << "Z (cm)";
+	_poisInformationTable->setHorizontalHeaderLabels(headerLabels);
+	_poisInformationTable->setAlternatingRowColors(true);
+	_poisInformationTable->setColumnWidth(0, 100);
+	_poisInformationTable->setColumnWidth(1, 50);
+	_poisInformationTable->setColumnWidth(2, 50);
+	_poisInformationTable->setColumnWidth(3, 50);
+
+	for (int i = 0; i < poiSemanticTypes->size(); i++ ) {
+
+		_rowIndexByPOISemantic[poiSemanticTypes->at(i).toStdString()] = i;
+
+		QTableWidgetItem* poiSemanticCell = new QTableWidgetItem(poiSemanticTypes->at(i));
+		_poisInformationTable->setItem(i, 0, poiSemanticCell);
+
+		QTableWidgetItem* poiCoordinateX = new QTableWidgetItem("NA cm");
+		_poisInformationTable->setItem(i, 1, poiCoordinateX);
+
+		QTableWidgetItem* poiCoordinateY = new QTableWidgetItem("NA cm");
+		_poisInformationTable->setItem(i, 2, poiCoordinateY);
+
+		QTableWidgetItem* poiCoordinateZ = new QTableWidgetItem("NA cm");
+		_poisInformationTable->setItem(i, 3, poiCoordinateZ);
+	}
+
+	_poisInformationToolBar->addWidget(new QLabel("Points Of Interest Detailed Information"));
+	_poisInformationToolBar->addWidget(_poisInformationTable);
+
+	addToolBar(Qt::RightToolBarArea, _poisInformationToolBar);
+
 }
 
 void MainWindow::createStatusBar() {
@@ -278,13 +347,18 @@ MainWindow::MainWindow(Mocap *mocap) :
 	createStatusBar();
 	createToolBars();
 
-	_captureController = new CaptureController(_mocapRef);
+	_captureController = new CaptureController(_mocapRef, this);
 	createSubWindows();
 	_captureController->resume();
 
 	_captureTimeRefresher = new QTimer();
 	connect(_captureTimeRefresher, SIGNAL(timeout()), this, SLOT(refreshCaptureTime()));
-	setWindowTitle(tr("OpenMoCap"));
+
+	char* windowTitle = new char[100];
+	strcpy(windowTitle, "OpenMoCap ");
+	strcat(windowTitle, "Build Date ");
+	strcat(windowTitle, __DATE__);
+	setWindowTitle(tr(windowTitle));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {

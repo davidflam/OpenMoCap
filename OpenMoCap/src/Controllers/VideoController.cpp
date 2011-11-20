@@ -28,29 +28,32 @@ void VideoController::run() {
 
 	while (true) {
 
-		IplImage* currentFrame = _cameraRef->getUndistortedFrame();
-
-		vector<POI> newPOIs;
-
 		if (_videoStatus == VideoStatusEnum::PLAY_LIVE) {
 
-			newPOIs = _POIFinder->getPOIsInImage(currentFrame);
+			IplImage* currentFrame = _cameraRef->getFrame();
+			vector<POI> newPOIs = _POIFinder->getPOIsInImage(currentFrame);
 			SetEvent(poiDetectionEndEvent);
 			suspend();
+
+			//--- Refreshes image already
 			trackNewPOIs(newPOIs, currentFrame);
 			SetEvent(trackingEndEvent);
 			suspend();
 
 		} else if (_videoStatus == VideoStatusEnum::RECORD) {
 
+			IplImage* currentFrame = _cameraRef->getFrame();
 			cvWriteFrame(_videoWriter, currentFrame);
+			vector<POI> newPOIs;
 			_POIsImageWidgetRef->refreshImage(currentFrame, newPOIs);
+
 			SetEvent(poiDetectionEndEvent);
 			suspend();
+
 			SetEvent(trackingEndEvent);
 			suspend();
 
-		} else if (_videoStatus == VideoStatusEnum::CALIBRATE) {
+		} else if (_videoStatus == VideoStatusEnum::CALIBRATE || _videoStatus == VideoStatusEnum::STOP) {
 
 			SetEvent(poiDetectionEndEvent);
 			suspend();
@@ -69,18 +72,7 @@ void VideoController::trackNewPOIs(vector<POI> detectedPOIs, IplImage* currentFr
 	int radius = 50;
 
 	//--- Tracker refreshes map of current initialized POIs with newly detected ones.
-	_tracker->refreshPOIsPosition(currentInitializedPOIs, detectedPOIs, _cameraRef->getWidth() - 1,
-			_cameraRef->getHeight() - 1, radius);
-
-	// Peito é o POI de teste
-	if (currentInitializedPOIs.find("Peito") != currentInitializedPOIs.end()){
-		// Desenha a posição estimada do ponto
-		cvCircle(currentFrame, cvPointFrom32f(currentInitializedPOIs["Peito"].getPredictedPosition()), 5, cvScalar(0,0,255), -1);
-		// Desenha o circulo da área de busca
-		cvCircle(currentFrame, cvPointFrom32f(currentInitializedPOIs["Peito"].getPredictedPosition()), radius, cvScalar(255,0,0));
-
-	}
-
+	_tracker->refreshPOIsPosition(currentInitializedPOIs, detectedPOIs, _cameraRef->getWidth() - 1, _cameraRef->getHeight() - 1, radius);
 
 	//--- We must update cameras POIs
 	_cameraRef->setPOIs(currentInitializedPOIs);

@@ -1,17 +1,17 @@
 HIERARCHY
-ROOT Quadril
+ROOT Hips
 {
 	OFFSET	0.00	0.00	0.00
 	CHANNELS 6 Xposition Yposition Zposition Zrotation Xrotation Yrotation
-	JOINT Peito
+	JOINT Chest
 	{
 		OFFSET	 0.00	 5.21	 0.00
 		CHANNELS 3 Zrotation Xrotation Yrotation
-		JOINT Pescoço
+		JOINT Neck
 		{
 			OFFSET	 0.00	 18.65	 0.00
 			CHANNELS 3 Zrotation Xrotation Yrotation
-			JOINT Cabeça
+			JOINT Head
 			{
 				OFFSET	 0.00	 5.45	 0.00
 				CHANNELS 3 Zrotation Xrotation Yrotation

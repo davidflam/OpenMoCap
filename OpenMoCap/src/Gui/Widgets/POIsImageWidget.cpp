@@ -64,7 +64,7 @@ void POIsImageWidget::refreshImage(IplImage* image, vector<POI> POIs) {
 
 POI POIsImageWidget::getPOIAtPosition(int x, int y) {
 
-	for (unsigned int i = 0; i < _POIs.size(); i++) {\
+	for (unsigned int i = 0; i < _POIs.size(); i++) {
 		if (_POIs.at(i).isPointInsideSelectionArea2d(x, y)) {
 			return _POIs.at(i);
 		}

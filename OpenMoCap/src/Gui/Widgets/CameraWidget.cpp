@@ -54,14 +54,18 @@ void CameraWidget::contextMenuEvent(QContextMenuEvent *event) {
 
 	QMenu contextMenu(this);
 
+	/* TODO Settings for each camera
 	QString settingsMenuLabel = QString("Settings");
     QMenu settingsMenu(settingsMenuLabel, &contextMenu);
     settingsMenu.addAction(_cameraInfoAction);
     settingsMenu.addAction(_POISettingsAction);
     settingsMenu.addAction(_trackingSettingsAction);
     contextMenu.addMenu(&settingsMenu);
-    if(!_videoController->getCamera()->getCameraType())
+    */
+
+    if(!_videoController->getCamera()->getCameraType()) {
     	contextMenu.addAction(_loadVideoAction);
+    }
 	contextMenu.addAction(_saveFrameAction);
 	contextMenu.addAction(_recordVideoAction);
 	contextMenu.addAction(_clearPOIsAction);
@@ -194,7 +198,7 @@ bool CameraWidget::eventFilter(QObject *target, QEvent *event) {
 			}
 
 			QPoint dialogPosition(mouseEvent->globalX(), mouseEvent->globalY());
-			POISemanticSelectionDialog POISemanticDialog(this, &selectedPOI, dialogPosition, _POISemanticTypesRef, _camerasRef);
+			POISemanticSelectionDialog POISemanticDialog(this, &selectedPOI, dialogPosition, _POISemanticTypesRef);
 
 			//--- POI semantic selection
 			POISemanticDialog.exec();
