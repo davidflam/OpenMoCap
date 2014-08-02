@@ -145,7 +145,7 @@ PANTHEIOS_CALL(void) pantheios_be_file_getAppInit(int backEndId,
 			| PANTHEIOS_BE_INIT_F_NO_SEVERITY
 			| PANTHEIOS_BE_INIT_F_NO_THREAD_ID;
 
-	init->fileName = "Log/OpenMoCap.log";
+	init->fileName = "OpenMoCap.log";
 }
 
 PANTHEIOS_CALL(int) pantheios_fe_init(void* reserved, void** ptoken) {

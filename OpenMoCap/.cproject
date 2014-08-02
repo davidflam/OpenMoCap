@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?>
-
-<cproject>
+<?fileVersion 4.0.0?><cproject>
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="cdt.managedbuild.config.gnu.mingw.exe.debug.1132149836">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.mingw.exe.debug.1132149836" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="QT_HOME" type="VALUE_PATH_DIR" value="C:\Qt\4.7.1"/>
-					<stringMacro name="OPENCV_HOME" type="VALUE_PATH_DIR" value="C:\Workspace\Cpp\OpenCV-2.3.1-bin"/>
+					<stringMacro name="OPENCV_HOME" type="VALUE_PATH_DIR" value="C:\opencv"/>
 					<stringMacro name="OPTITRACK_HOME" type="VALUE_PATH_DIR" value="C:\Program Files (x86)\NaturalPoint\Optitrack"/>
+					<stringMacro name="QT_HOME" type="VALUE_PATH_DIR" value="C:\Qt\4.7.4"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -19,11 +17,11 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="Mocap" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="cdt.managedbuild.config.gnu.mingw.exe.debug.1132149836" name="Debug" parent="cdt.managedbuild.config.gnu.mingw.exe.debug" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="">
+				<configuration artifactName="Mocap" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="cdt.managedbuild.config.gnu.mingw.exe.debug.1132149836" name="Debug" parent="cdt.managedbuild.config.gnu.mingw.exe.debug" postannouncebuildStep="" postbuildStep="" preannouncebuildStep="" prebuildStep="cmd /c xcopy ..\Resources Resources /e /i /y">
 					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1132149836." name="/" resourcePath="">
 						<toolChain errorParsers="" id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.429309782" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.PE" id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug.192844098" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
-							<builder buildPath="${workspace_loc:/Mocap/Debug}" errorParsers="" id="cdt.managedbuild.tool.gnu.builder.mingw.base.1778441270" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" parallelBuildOn="true" parallelizationNumber="-6" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
+							<builder buildPath="${workspace_loc:/Mocap/Debug}" errorParsers="" id="cdt.managedbuild.tool.gnu.builder.mingw.base.1778441270" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
 							<tool command="as" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GASErrorParser" id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.454866841" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.257787622" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -55,17 +53,17 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.54700093" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug"/>
 							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1268394906" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug">
 								<option id="gnu.cpp.link.option.libs.662726775" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" value="opencv_core231"/>
+									<listOptionValue builtIn="false" value="opencv_core249"/>
 									<listOptionValue builtIn="false" value="videoInput"/>
-									<listOptionValue builtIn="false" value="opencv_legacy231"/>
-									<listOptionValue builtIn="false" value="opencv_contrib231"/>
-									<listOptionValue builtIn="false" value="opencv_objdetect231"/>
-									<listOptionValue builtIn="false" value="opencv_highgui231"/>
-									<listOptionValue builtIn="false" value="opencv_ml231"/>
-									<listOptionValue builtIn="false" value="opencv_features2d231"/>
-									<listOptionValue builtIn="false" value="opencv_video231"/>
-									<listOptionValue builtIn="false" value="opencv_calib3d231"/>
-									<listOptionValue builtIn="false" value="opencv_imgproc231"/>
+									<listOptionValue builtIn="false" value="opencv_legacy249"/>
+									<listOptionValue builtIn="false" value="opencv_contrib249"/>
+									<listOptionValue builtIn="false" value="opencv_objdetect249"/>
+									<listOptionValue builtIn="false" value="opencv_highgui249"/>
+									<listOptionValue builtIn="false" value="opencv_ml249"/>
+									<listOptionValue builtIn="false" value="opencv_features2d249"/>
+									<listOptionValue builtIn="false" value="opencv_video249"/>
+									<listOptionValue builtIn="false" value="opencv_calib3d249"/>
+									<listOptionValue builtIn="false" value="opencv_imgproc249"/>
 									<listOptionValue builtIn="false" value="ole32"/>
 									<listOptionValue builtIn="false" value="oleaut32"/>
 									<listOptionValue builtIn="false" value="ddraw"/>
@@ -84,13 +82,13 @@
 									<listOptionValue builtIn="false" value="opengl32"/>
 									<listOptionValue builtIn="false" value="glu32"/>
 									<listOptionValue builtIn="false" value="gdi32"/>
-									<listOptionValue builtIn="false" value="pantheios.1.core.gcc45.mt"/>
-									<listOptionValue builtIn="false" value="pantheios.1.be.lrsplit.gcc45.mt"/>
-									<listOptionValue builtIn="false" value="pantheios.1.bel.file.gcc45.mt"/>
-									<listOptionValue builtIn="false" value="pantheios.1.bec.file.WithCallback.gcc45.mt"/>
-									<listOptionValue builtIn="false" value="pantheios.1.ber.fprintf.gcc45.mt"/>
-									<listOptionValue builtIn="false" value="pantheios.1.bec.fprintf.WithCallback.gcc45.mt"/>
-									<listOptionValue builtIn="false" value="pantheios.1.util.gcc45.mt"/>
+									<listOptionValue builtIn="false" value="pantheios.1.core.gcc44.mt"/>
+									<listOptionValue builtIn="false" value="pantheios.1.be.lrsplit.gcc44.mt"/>
+									<listOptionValue builtIn="false" value="pantheios.1.bel.file.gcc44.mt"/>
+									<listOptionValue builtIn="false" value="pantheios.1.bec.file.WithCallback.gcc44.mt"/>
+									<listOptionValue builtIn="false" value="pantheios.1.ber.fprintf.gcc44.mt"/>
+									<listOptionValue builtIn="false" value="pantheios.1.bec.fprintf.WithCallback.gcc44.mt"/>
+									<listOptionValue builtIn="false" value="pantheios.1.util.gcc44.mt"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.2110666604" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${OPENCV_HOME}\build\x86\mingw\lib&quot;"/>
@@ -101,6 +99,7 @@
 									<listOptionValue builtIn="false" value="&quot;..\Vendor\pantheios\lib&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.flags.1624517069" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="" valueType="string"/>
+								<option id="gnu.cpp.link.option.userobjs.1427963572" name="Other objects" superClass="gnu.cpp.link.option.userobjs"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.696644060" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -116,17 +115,13 @@
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
-			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
-				<buildTargets/>
-			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="cdt.managedbuild.config.gnu.mingw.exe.release.701372047">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.mingw.exe.release.701372047" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<macros>
-					<stringMacro name="QT_HOME" type="VALUE_PATH_DIR" value="C:\Qt\2009.03\qt"/>
-					<stringMacro name="MINGW_HOME" type="VALUE_PATH_DIR" value="C:\MinGW"/>
-					<stringMacro name="OPENCV_HOME" type="VALUE_PATH_DIR" value="C:\OpenCV1.1"/>
+					<stringMacro name="OPENCV_HOME" type="VALUE_PATH_DIR" value="C:\opencv"/>
 					<stringMacro name="OPTITRACK_HOME" type="VALUE_PATH_DIR" value="C:\Program Files (x86)\NaturalPoint\OptiTrack"/>
+					<stringMacro name="QT_HOME" type="VALUE_PATH_DIR" value="C:\Qt\4.7.4"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -137,11 +132,11 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="Mocap" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.mingw.exe.release.701372047" name="Release" parent="cdt.managedbuild.config.gnu.mingw.exe.release">
+				<configuration artifactName="Mocap" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.mingw.exe.release.701372047" name="Release" parent="cdt.managedbuild.config.gnu.mingw.exe.release" postbuildStep="" prebuildStep="cmd /c xcopy ..\Resources Resources /e /i /y">
 					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.release.701372047." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.release.1594190362" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.release">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.release.606363626" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.release"/>
-							<builder buildPath="${workspace_loc:/Mocap/Release}" id="cdt.managedbuild.tool.gnu.builder.mingw.base.300756722" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" parallelBuildOn="true" parallelizationNumber="-2" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
+							<builder buildPath="${workspace_loc:/Mocap/Release}" id="cdt.managedbuild.tool.gnu.builder.mingw.base.300756722" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.release.541576657" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.release">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.774294044" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -228,16 +223,18 @@
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
-			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
-				<buildTargets/>
-			</storageModule>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="Mocap.cdt.managedbuild.target.gnu.mingw.exe.2004186170" name="Executable" projectType="cdt.managedbuild.target.gnu.mingw.exe"/>
 	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/OpenMoCap"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/OpenMoCap"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/OpenMoCap"/>
+		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
@@ -454,5 +451,9 @@
 				</scannerInfoProvider>
 			</profile>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets/>
 	</storageModule>
 </cproject>
